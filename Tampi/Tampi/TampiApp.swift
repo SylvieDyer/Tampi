@@ -9,7 +9,6 @@ import SwiftUI
 
 @main
 struct TampiApp: App {
-
     #warning("Update DEVICE_NAME")
     let DEVICE_NAME = "LAMPI XXXXXXX"
     let USE_BROWSER = false

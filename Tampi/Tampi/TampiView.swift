@@ -9,21 +9,96 @@ import SwiftUI
 
 struct TampiView: View {
     @ObservedObject var tampi: Tampi
-   
     
     var body: some View {
-        VStack(alignment: .leading) {
-            Text("Tampi").multilineTextAlignment(.leading).bold().padding()
-     
-            Text("Currently viewing \(tampi.userInfo.cycleOwnerName)'s cycle")
-            Spacer()
+        VStack {
+            HStack{
+                Text("Tampi").font(.largeTitle).bold().padding(.leading, 15)
+                Spacer()
+            }
+            VStack{ 
+                if (tampi.appController.home){
+                    HomeView(tampi: tampi)
+                }
+                else if (tampi.appController.tracker){
+                    TrackerView(tampi: tampi)
+                }
+                else if (tampi.appController.education){
+                    EduView(tampi: tampi)
+                    Spacer()
+                }
+                else if (tampi.appController.settings){
+                    SettingsView(tampi: tampi)
+                }
+               
+            }
             
             HStack{
-                Button(action: nil) {
-                    Text("Sign In")
+              
+                Button(action:{
+                    tampi.appController.setHome()
+                }){
+                    Image(systemName: "house.fill")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit).frame(width: 60, height: 30)
+                        .foregroundColor(tampi.appController.home ? .orange.opacity(0.95) : .gray)
                 }
-            }
+                .padding(.top, 25)
+                .padding(.bottom, 15)
+                .frame(width: 100)
+                .background(tampi.appController.home ? .white.opacity(0.3) : .clear)
+                
+                
+              //  Spacer()
+                Button(action: {
+                    tampi.appController.setTracker()
+                }) {
+                    Image(systemName: "calendar")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit).frame(width: 60, height: 30)
+                        .foregroundColor(tampi.appController.tracker ? .teal.opacity(0.75) : .gray)
+                }
+                .padding(.top, 25)
+                .padding(.bottom, 15)
+                .frame(width: 100)
+                .background(tampi.appController.tracker ? .white.opacity(0.3) : .clear)
+                
+              //  Spacer()
+                Button(action: {
+                    tampi.appController.setEducation()
+                }) {
+                    Image(systemName: "graduationcap.fill")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit).frame(width: 60, height: 30)
+                        .foregroundColor(tampi.appController.education ? .pink.opacity(0.75) : .gray)
+                }
+                .padding(.top, 25)
+                .padding(.bottom, 15)
+                .frame(width: 100)
+                .background(tampi.appController.education ? .white.opacity(0.3) : .clear)
+                
+              //  Spacer()
+                Button(action: {
+                    tampi.appController.setSettings()
+                }) {
+                    Image(systemName: "gear")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit).frame(width: 60, height: 30)
+                        .foregroundColor(tampi.appController.settings ? .blue.opacity(0.75) : .gray)
+                }
+                .padding(.top, 25)
+                .padding(.bottom, 15)
+                .frame(width: 100)
+                .background(tampi.appController.settings ? .white.opacity(0.3) : .clear)
+                
+             
+            }.background(Color.indigo.opacity(0.25).edgesIgnoringSafeArea(.bottom))
+                
+             
+                
+            
         }
+        
     }
 }
 

@@ -12,6 +12,10 @@
 		5A4BDD7029DB759600E0797B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5A4BDD6F29DB759600E0797B /* Preview Assets.xcassets */; };
 		5A4BDD7729DB77B900E0797B /* TampiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4BDD7629DB77B900E0797B /* TampiView.swift */; };
 		5A4BDD7929DB786300E0797B /* Tampi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4BDD7829DB786300E0797B /* Tampi.swift */; };
+		5A4BDD7C29DCA73E00E0797B /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4BDD7B29DCA73E00E0797B /* HomeView.swift */; };
+		5A4BDD7E29DCA77400E0797B /* TrackerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4BDD7D29DCA77400E0797B /* TrackerView.swift */; };
+		5A4BDD8029DCA7E100E0797B /* EduView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4BDD7F29DCA7E100E0797B /* EduView.swift */; };
+		5A4BDD8229DCA81E00E0797B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4BDD8129DCA81E00E0797B /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +25,10 @@
 		5A4BDD6F29DB759600E0797B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		5A4BDD7629DB77B900E0797B /* TampiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TampiView.swift; sourceTree = "<group>"; };
 		5A4BDD7829DB786300E0797B /* Tampi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tampi.swift; sourceTree = "<group>"; };
+		5A4BDD7B29DCA73E00E0797B /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		5A4BDD7D29DCA77400E0797B /* TrackerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerView.swift; sourceTree = "<group>"; };
+		5A4BDD7F29DCA7E100E0797B /* EduView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EduView.swift; sourceTree = "<group>"; };
+		5A4BDD8129DCA81E00E0797B /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -53,9 +61,10 @@
 		5A4BDD6729DB759500E0797B /* Tampi */ = {
 			isa = PBXGroup;
 			children = (
+				5A4BDD7629DB77B900E0797B /* TampiView.swift */,
+				5A4BDD7A29DCA6E400E0797B /* Views */,
 				5A4BDD7829DB786300E0797B /* Tampi.swift */,
 				5A4BDD6829DB759500E0797B /* TampiApp.swift */,
-				5A4BDD7629DB77B900E0797B /* TampiView.swift */,
 				5A4BDD6C29DB759600E0797B /* Assets.xcassets */,
 				5A4BDD6E29DB759600E0797B /* Preview Content */,
 			);
@@ -68,6 +77,17 @@
 				5A4BDD6F29DB759600E0797B /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		5A4BDD7A29DCA6E400E0797B /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				5A4BDD7B29DCA73E00E0797B /* HomeView.swift */,
+				5A4BDD7D29DCA77400E0797B /* TrackerView.swift */,
+				5A4BDD7F29DCA7E100E0797B /* EduView.swift */,
+				5A4BDD8129DCA81E00E0797B /* SettingsView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -140,8 +160,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A4BDD8229DCA81E00E0797B /* SettingsView.swift in Sources */,
 				5A4BDD7729DB77B900E0797B /* TampiView.swift in Sources */,
+				5A4BDD7C29DCA73E00E0797B /* HomeView.swift in Sources */,
 				5A4BDD6929DB759500E0797B /* TampiApp.swift in Sources */,
+				5A4BDD8029DCA7E100E0797B /* EduView.swift in Sources */,
+				5A4BDD7E29DCA77400E0797B /* TrackerView.swift in Sources */,
 				5A4BDD7929DB786300E0797B /* Tampi.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

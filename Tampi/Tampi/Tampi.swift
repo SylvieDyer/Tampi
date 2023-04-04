@@ -21,6 +21,7 @@ class Tampi: NSObject, ObservableObject {
     }
     
     @Published var userInfo = UserInfo()
+    @Published var appController = AppController()
     
     private func setupPeripheral() {
         if let lampiPeripheral = lampiPeripheral  {
@@ -116,12 +117,12 @@ extension Tampi {
     
     struct UserInfo: Equatable {
         // who owns the Lampi?
-        var tampiOwnerName: String = "USER DEFAULT"
+        var tampiOwnerName: String = "Sylvie" // DEFAULT FOR NOW
         // if the Tampi is tracking their own cycle or not
         var userCycle = false
         // name of the cycle owner
         var cycleOwnerName: String{
-            userCycle ? tampiOwnerName : "CYCLE OWNER DEFAULT"
+            userCycle ? tampiOwnerName : "Luis" // DEFAULT FOR NOW
         }
         
         // average cycle length - defaults at 28
@@ -140,6 +141,43 @@ extension Tampi {
         //TODO: updating on app: each number on calendar will be value in hash table? or somethign that is a listener maybe each on eis a button with an id being the motn and date and we go from there... not sure... easiest thingw ould be to only allow one cucle at once on the calendar page (so if ur period comes from March 27 - April 3, you only see like... half of march and half of april (rather than being able to click an arrow to see ach separately? idk not sure.
         
         // TODO: Futher thoughts... bc we won't be sending the calendar over BLE, we'll just be sending a value or smthn that will get parsed on the lampi end maybe indicating what color it shold be ? not rly sure how to pass data otherwise , but if eel like passing the info ab where in cycle makes sense to me . also we won't be listening for changes from BLE either for the cycle information
+    }
+    
+    struct AppController: Equatable{
+        var home = true
+        var tracker = false
+        var education = false
+        var settings = false
+    
+        mutating func setHome(){
+            home = true
+            tracker = false
+            education = false
+            settings = false
+        }
+        
+        mutating func setTracker(){
+            tracker = true
+            home = false
+            education = false
+            settings = false
+        }
+        
+        mutating func setEducation(){
+            education = true
+            home = false
+            tracker = false
+            settings = false
+        }
+        
+        mutating func setSettings(){
+            settings = true
+            home = false
+            tracker = false
+            education = false
+            
+        }
+        
     }
 }
 
