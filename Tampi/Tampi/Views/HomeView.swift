@@ -10,31 +10,39 @@ import SwiftUI
 struct HomeView: View{
     @ObservedObject var tampi: Tampi
     var body: some View{
-        
-        // home-header section
+
+            // home-header section
         List {
-            Text("Welcome Back \(tampi.userInfo.tampiOwnerName)!").bold().font(.title2)
+            Text("Welcome Back, \(tampi.userInfo.tampiOwnerName)!").bold().font(.title2)
             VStack{
                 Text("Currently tracking ")
-                    .foregroundColor(.gray) +
+                    .foregroundColor(.gray).fontWeight(.semibold) +
                 Text("**\(tampi.userInfo.cycleOwnerName)'s** ")
-                    .foregroundColor(.purple.opacity(0.78)) +
+                    .foregroundColor(.purple.opacity(0.78)).fontWeight(.semibold)  +
                 Text("cycle")
-                    .foregroundColor(.gray)
+                    .foregroundColor(.gray).fontWeight(.semibold)
             }
             .font(.title3)
-           // .scaledToFit()
+            // .scaledToFit()
             //.minimumScaleFactor(0.01)
             //.lineLimit(1)
             
             // info on cycle
-            Text("There are XXs days until the cycle begins").font(.title2)
-        }.scrollDisabled(true)
-        
-      
-        Text("Control your TAMPI below!").font(.title3).fontWeight(.heavy).multilineTextAlignment(.leading)
-
-        // list of lampi controls
+        }.scrollDisabled(true).frame(height: 150)
+        List{
+            HStack{
+                Spacer()
+                Text("There are XX days until \(tampi.userInfo.cycleOwnerName)'s cycle begins").font(.title3).multilineTextAlignment(.center).fontWeight(.semibold).foregroundColor(.black.opacity(0.6))
+                Spacer()
+            }
+        }.scrollDisabled(true).frame(height: 130)
+            
+    
+            Divider()
+            Text("Control your TAMPI below!").foregroundColor(.indigo.opacity(0.6)).font(.title3).fontWeight(.heavy).multilineTextAlignment(.leading)
+           
+            
+            // list of lampi controls
         List {
             Button(action:{
                 tampi.lampiState.isOn = !tampi.lampiState.isOn
@@ -108,12 +116,7 @@ struct HomeView: View{
                 
             }
         }
-        Spacer()
-        
-        
-        
-        
-        
+           
     }
 }
 

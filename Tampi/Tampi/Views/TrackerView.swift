@@ -17,13 +17,15 @@ struct TrackerView: View {
     
     var body: some View {
         List {
-            Text("Welcome to the Tracker Page!").bold()
+            Text("Welcome to the Tracker Page!").bold().font(.title2)
             
             VStack{
-                Text("Here, you can view ") +
+                Text("Here, you can view ")
+                    .foregroundColor(.gray).fontWeight(.semibold) +
                 Text("**\(tampi.userInfo.cycleOwnerName)'s** ")
                     .foregroundColor(.purple) +
                 Text("cycle!")
+                    .foregroundColor(.gray).fontWeight(.semibold)
             }
           
        
