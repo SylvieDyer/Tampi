@@ -1,0 +1,38 @@
+#:kivy 1.9
+
+BoxLayout:
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    orientation: 'vertical'
+
+    Label:
+        text: 'Tampi'
+
+    ToggleButton:
+        text: 'Cycle'
+        state: app.cycle
+        on_state: app.cycle = self.state
+
+    ToggleButton:
+        text: 'Preset 1'
+        state: app.preset1
+        on_state: app.preset1 = self.state
+
+    ToggleButton:
+        text: 'Preset 2'
+        state: app.preset2
+        on_state: app.preset2 = self.state
+
+    Slider:
+        value: 1
+        on_value: app.brightness = self.value
+
+    ToggleButton:
+        text: 'Power'
+        state: 'down' if app.power else 'normal'
+        on_state: app.power = True if self.state == 'down' else False
