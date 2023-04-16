@@ -5,6 +5,8 @@ from kivy.clock import Clock
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from lamp_driver import LampDriver
+import lamp_util
+import pigpio
 
 class TampiApp(App):
     curr_mode = NumericProperty(0)
@@ -75,8 +77,8 @@ class TampiApp(App):
 
     def update_device_status_popup(self, instance):
         interface = "wlan0"
-        ipaddr = lamp.lamp_util.get_ip_address(interface)
-        deviceid = lamp.lamp_util.get_device_id()
+        ipaddr = lamp_util.get_ip_address(interface)
+        deviceid = lamp_util.get_device_id()
         msg = ("{}: {}\n"
                "DeviceID: {}\n"
                "Broker Bridged: {}\n"
