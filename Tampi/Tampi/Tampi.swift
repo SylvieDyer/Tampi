@@ -108,6 +108,8 @@ extension Tampi {
 }
 
 extension Tampi {
+    
+   
     // to track changes on the lamp (may not even be doing this ?)
     struct LampiState: Equatable {
         var isConnected = false
@@ -132,6 +134,10 @@ extension Tampi {
         // TODO: ORRRR, use a hashtable with a deafaulf of 31 keys where the values will be boleans to indicate period or not?
         var cycleInfo: [Int: Bool] = [:]
         
+        var dayOne = Date()
+        var dates: Set<DateComponents> = []
+        
+        
         init(){
             // to set up the hash table with dates
             for i in 1 ... 31 {
@@ -144,10 +150,11 @@ extension Tampi {
     }
     
     struct AppController: Equatable{
-        var home = true
-        var tracker = false
+        var home = false //TODO: CHANGE BACK
+        var tracker = true
         var education = false
         var settings = false
+        var editTracker = false
     
         mutating func setHome(){
             home = true
