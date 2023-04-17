@@ -10,32 +10,66 @@ import SwiftUI
 struct SettingsView: View {
     @ObservedObject var tampi: Tampi
     @State private var showChangeTampiOwner = false
+    @State private var showChangePresets = false
 
-    
     var body: some View {
         List {
-            Text("Welcome to the Settings Page, \(tampi.userInfo.tampiOwnerName)!").bold().font(.title2)
-        }.scrollDisabled(true).padding(.bottom, 0).frame(height: 150)
-       
-        // tbd what settings we're changing
-        List{
-            Button("Change Tampi Owner's Name") {
-                showChangeTampiOwner.toggle()
+            Section {
+                Text("Welcome to the Settings Page, \(tampi.userInfo.userName)!").bold().font(.title2)
             }
-            .sheet(isPresented: $showChangeTampiOwner) {
-                VStack{
-                    SheetView()
-                    
-                    Text("??")
-                    Spacer()
+            Section{
+                Button("Change Username") {
+                    showChangeTampiOwner.toggle();
+                    tampi.userInfo.resetEditPlaceholder()
+                }
+                .sheet(isPresented: $showChangeTampiOwner) {
+                    VStack{
+                        SheetView()
+                        Text("Change Username:")
+                        HStack{
+                            Spacer()
+                            TextField(
+                                "Enter New Username Here",
+                                text: $tampi.userInfo.editingUserName
+                            )
+                            .padding()
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .background(.indigo.opacity(0.2))
+                            .cornerRadius(10)
+                            
+                            Spacer()
+                        }
+                        Button("Save"){
+                            if (tampi.userInfo.editingUserName != ""){
+                                tampi.userInfo.userName = tampi.userInfo.editingUserName
+                            }
+                        }
+                        Spacer()
+                    }
+                }
+                .fontWeight(.heavy)
+                .foregroundColor(.indigo)
+                .font(.title3)
+                
+                Button("Change Presets") {
+                    showChangePresets.toggle()
+                }
+                .sheet(isPresented: $showChangePresets) {
+                    VStack{
+                        SheetView()
+                        
+                        Text("Change Presets")
+                        Spacer()
+                    }
                 }
             }
-            
-            Text("Change Tampi Owner-Name")
-            Text("Change Cycle Owner-Name")
-            Text("Change Color Scheme")
-            Text("Change Presets")
-        }.bold()
+                    
+            .fontWeight(.heavy)
+            .foregroundColor(.indigo)
+            .font(.title3)
+                
+        }.scrollDisabled(true).padding(.bottom, 0)
+        
         Spacer()
     }
 }
@@ -46,12 +80,6 @@ struct SheetView: View {
     var body: some View {
         HStack{
             Spacer()
-            
-//            Button(Image(systemName: "exit")) {
-//                Image(systemName: "exit")
-//                dismiss()
-//            }
-//
             Button(action:{
                 dismiss()
             })

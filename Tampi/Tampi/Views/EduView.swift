@@ -12,33 +12,36 @@ struct EduView: View {
     var body: some View {
         VStack{
             List {
-                Text("Welcome to the Education Page, \(tampi.userInfo.tampiOwnerName)!").bold().font(.title2)
-            }.scrollDisabled(true).padding(.bottom, 0).frame(height: 150)
-            
-            List {
-                Section(header: Text("For \(tampi.userInfo.cycleOwnerName)")
-                    .font(.title3).fontWeight(.heavy).foregroundColor(.black.opacity(0.58))){
-                        Link("Your First Period & You", destination: URL(string:"https://www.google.com/search?client=safari&rls=en&q=sea+anenome&ie=UTF-8&oe=UTF-8")!)
+                Section{
+                    Text("Welcome to the Education Page, \(tampi.userInfo.userName)!").bold().font(.title2)
+                }
+                
+                Section {
+                    Section(header: Text("For YOU")
+                        .font(.title3).fontWeight(.heavy).foregroundColor(.black.opacity(0.58))){
+                            Link("Understanding the Menstrual Cycle", destination: URL(string:"https://www.mayoclinic.org/healthy-lifestyle/womens-health/in-depth/menstrual-cycle/art-20047186")!)
+                                .foregroundColor(.teal)
+                            Link("More On Premenstrual Syndrome", destination: URL(string:"https://www.mayoclinic.org/diseases-conditions/premenstrual-syndrome/symptoms-causes/syc-20376780")!)
+                                .foregroundColor(.teal)
+                        }.bold()
+                    
+                    Section(header: Text("For Family").font(.title3).fontWeight(.heavy).foregroundColor(.black.opacity(0.58))){ //footer: Text("We will miss you")) {
+                        Link("Fostering an Open Discussion About Menstruation", destination: URL(string:"https://mcpress.mayoclinic.org/parenting/dads-daughters-and-talking-about-menstruation-advice-from-an-expert/")!)
                             .foregroundColor(.teal)
-                        Link("Understanding your changing body", destination: URL(string:"https://www.google.com/search?client=safari&rls=en&q=sea+anenome&ie=UTF-8&oe=UTF-8")!)
+                        Link("Teen Angst or Menstration", destination: URL(string:"https://www.google.com/search?client=safari&rls=en&q=sea+anenome&ie=UTF-8&oe=UTF-8")!)
+                            .foregroundColor(.teal)
+                        
+                    }.bold()
+                    
+                    Section(header: Text("For Friends").font(.title3).fontWeight(.heavy).foregroundColor(.black.opacity(0.58)), footer: Text("A lot to learn")) {
+                        Link("When is it ok to ask \"are you on your period\"? ", destination: URL(string:"https://www.google.com/search?client=safari&rls=en&q=sea+anenome&ie=UTF-8&oe=UTF-8")!)
                             .foregroundColor(.teal)
                     }.bold()
-                
-                Section(header: Text("For Family").font(.title3).fontWeight(.heavy).foregroundColor(.black.opacity(0.58))){ //footer: Text("We will miss you")) {
-                    Link("Understanding your daughter's flow", destination: URL(string:"https://www.google.com/search?client=safari&rls=en&q=sea+anenome&ie=UTF-8&oe=UTF-8")!)
-                        .foregroundColor(.teal)
-                    Link("Teen Angst or Menstration", destination: URL(string:"https://www.google.com/search?client=safari&rls=en&q=sea+anenome&ie=UTF-8&oe=UTF-8")!)
-                        .foregroundColor(.teal)
                     
-                }.bold()
+                }.listStyle(GroupedListStyle())
                 
-                Section(header: Text("For Friends").font(.title3).fontWeight(.heavy).foregroundColor(.black.opacity(0.58)), footer: Text("A lot to learn")) {
-                    Link("When is it ok to ask \"are you on your period\"? ", destination: URL(string:"https://www.google.com/search?client=safari&rls=en&q=sea+anenome&ie=UTF-8&oe=UTF-8")!)
-                        .foregroundColor(.teal)
-                }.bold()
-                
-            }.listStyle(GroupedListStyle())
-            
+            }
+            .padding(.bottom, 0)
             
         }
         Spacer()

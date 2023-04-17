@@ -15,17 +15,16 @@ struct TampiView: View {
             HStack(alignment: .lastTextBaseline, spacing:0){
                 Text("Tamp").font(.largeTitle).bold().padding(.leading, 15)
                      .fontWidth(.expanded)
+                     .font(.callout)
                 Image(systemName:"balloon.fill")
                     .resizable()
                     .rotationEffect(Angle(degrees: 180))
-                    .frame(width: 10, height: 40)
+                    .frame(width: 10, height: 36)
                     .foregroundColor(.black)
                     .padding(.leading, 2)
-                 
-                
                 Spacer()
             }
-            VStack{ 
+            VStack{
                 if (tampi.appController.home){
                     HomeView(tampi: tampi)
                 }
@@ -34,7 +33,7 @@ struct TampiView: View {
                 }
                 else if (tampi.appController.education){
                     EduView(tampi: tampi)
-                    Spacer()
+      
                 }
                 else if (tampi.appController.settings){
                     SettingsView(tampi: tampi)

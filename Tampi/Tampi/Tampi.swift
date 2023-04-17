@@ -118,14 +118,11 @@ extension Tampi {
     }
     
     struct UserInfo: Equatable {
-        // who owns the Lampi?
-        var tampiOwnerName: String = "Sylvie" // DEFAULT FOR NOW
-        // if the Tampi is tracking their own cycle or not
-        var userCycle = false
-        // name of the cycle owner
-        var cycleOwnerName: String{
-            userCycle ? tampiOwnerName : "Luis" // DEFAULT FOR NOW
-        }
+        var newUser = true
+        // menstruator
+        var userName: String = "Luis" // DEFAULT FOR NOW
+        
+        var editingUserName: String = ""
         
         // average cycle length - defaults at 28
         var averageCycleLength: Double = 28
@@ -141,11 +138,40 @@ extension Tampi {
 //            //return dates
 //        }
         
+        let formatter = DateFormatter()
+
+        
+        var formatSelectedDates: String {
+            var formattedDates: String = ""
+            formatter.dateFormat = "MMM d, yyyy"
+            let dates = cycleDates
+                .compactMap { date in
+                    Calendar.current.date(from: date)
+                }
+                .map { date in
+                    formatter.string(from: date)
+                }
+            formattedDates = dates.joined(separator: "\n")
+            
+            return formattedDates
+        }
+        
+        mutating func resetEditPlaceholder() {
+            editingUserName = userName
+        }
+        
         init(){
             // to set up the hash table with dates
             for i in 1 ... 31 {
                 cycleInfo[i] = false
             }
+            editingUserName = userName
+        }
+        
+        //TODO: add the math and such
+        var daysUntilNewCycle: Int{
+            // dayOne+ averageCycleLength
+            return 20
         }
         //TODO: updating on app: each number on calendar will be value in hash table? or somethign that is a listener maybe each on eis a button with an id being the motn and date and we go from there... not sure... easiest thingw ould be to only allow one cucle at once on the calendar page (so if ur period comes from March 27 - April 3, you only see like... half of march and half of april (rather than being able to click an arrow to see ach separately? idk not sure.
         
@@ -153,10 +179,10 @@ extension Tampi {
     }
     
     struct AppController: Equatable{
-        var home = false
-        var tracker = false
+        var home = true
+        var tracker = false  //TODO: CHANGE BACK
         var education = false
-        var settings = true //TODO: CHANGE BACK
+        var settings = false
         var editTracker = false
     
         mutating func setHome(){
