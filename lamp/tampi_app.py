@@ -170,50 +170,6 @@ class TampiApp(App):
                           json.dumps(msg).encode('utf-8'),
                           qos=1)
         self._publish_clock = None
-#    def on_preset1(self, instance, value):
-        #if value == 'down' and (value != self.preset1):
-#        self._update_lamp_mode(1, self.preset1)
-
-#    def on_preset2(self, instance, value):
-#        self._update_lamp_mode(2, self.preset2)
-
-#    def on_brightness(self, instance, value):
-#        self._update_brightness(self.brightness)
-
-#    def on_power(self, instance, value):
-#        self._update_power(self.power)
-
-  #  def _update_lamp_mode(self, value, state):
-  #      self.curr_mode = value
-  #      if (value == 0):
-  #          self.cycle = state
-  #          self.preset1 = 'normal'
-  #          self.preset2 = 'normal'
-  #      elif (value == 1):
-  #          self.cycle = 'normal'
-  #          self.preset1 = state
-  #          self.preset2 = 'normal'
-  #      elif (value == 2):
-  #          self.cycle = 'normal'
-  #          self.preset1 = 'normal'
-  #          self.preset2 = state
-   #     if self.power:
-   #         self.driver.set_mode(value, self.brightness, self.power)
-
-    #def _update_brightness(self, value):
-    #    self.brightness = value
-    #    print("BRIGHTNESS CHANGED " + str(value))
-    #    self.driver.set_mode(self.curr_mode, self.brightness, self.power)
-    #    #if self.power:
-    #    #    self.driver.set_brightness(value)
-
-    #def _update_power(self, value):
-    ##    self.power = value
-     #   self.driver.set_mode(self.curr_mode, self.brightness, self.power)
-#        if value:
-#            self.driver.power_on(self.curr_mode)
-#        else:
-#            self.driver.power_off()
 
     def set_up_GPIO_and_device_status_popup(self):
         self.pi = pigpio.pi()
