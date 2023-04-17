@@ -15,7 +15,11 @@ class TampiApp(App):
     power = BooleanProperty(False)
     driver = LampDriver()
 
+    def on_start(self):
+        print(self.cycle)
+
     def on_cycle(self, instance, value):
+        print(value)
         self._update_lamp_mode(0, self.cycle)
 
     def on_preset1(self, instance, value):

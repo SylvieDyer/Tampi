@@ -30,7 +30,7 @@ BoxLayout:
 
     Slider:
         value: 1
-        on_value: app.brightness = self.value
+        on_value: app.brightness = self.value / 100.0
 
     ToggleButton:
         text: 'Power'
