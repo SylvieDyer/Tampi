@@ -18,7 +18,8 @@ struct TrackerView: View {
     
     @ObservedObject var tampi: Tampi
     @State private var selectedDates: Set<DateComponents> = []
-    
+    var calendar = Calendar.current
+
    
     
     @State private var formattedDates: String = ""
@@ -34,6 +35,21 @@ struct TrackerView: View {
             }
         formattedDates = dates.joined(separator: "\n")
     }
+    
+//    // sets the cycle day and predicts the next ones:
+//    private func setCycleDates(){
+//        for date in selectedDates{
+//            let today = calendar.date(from: date)
+//            for i in 0...5{
+//                let day = calendar.date(byAdding: .day, value: i, to: today!)
+//
+////                selectedDates.insert(DateComponents(year: day.year, month: day.month, day: day.day))
+//            }
+        //}
+       
+    //}
+    
+    
     let formatter = DateFormatter()
     
     var body: some View {
@@ -62,6 +78,7 @@ struct TrackerView: View {
                 .onChange(of: selectedDates, perform: { _ in
                     formatSelectedDates()
                 })
+               // .onChange(of: selectedDates, perform: {_ in setCycleDates()})
                 .disabled(!tampi.appController.editTracker)
                 
                 
@@ -74,7 +91,7 @@ struct TrackerView: View {
             }
             
             Section {
-                
+                Text("Key Dates this Month:").fontWeight(.bold)
                 LazyVStack(alignment: .leading) {
                     Text(formattedDates)
                 }

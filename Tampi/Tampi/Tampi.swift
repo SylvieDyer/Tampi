@@ -135,8 +135,11 @@ extension Tampi {
         var cycleInfo: [Int: Bool] = [:]
         
         var dayOne = Date()
-        var dates: Set<DateComponents> = []
+        var cycleDates: Set<DateComponents> = []
         
+//        var setDates: Set<DateComponents>{
+//            //return dates
+//        }
         
         init(){
             // to set up the hash table with dates
