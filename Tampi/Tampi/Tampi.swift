@@ -153,10 +153,10 @@ extension Tampi {
     }
     
     struct AppController: Equatable{
-        var home = false //TODO: CHANGE BACK
-        var tracker = true
+        var home = false
+        var tracker = false
         var education = false
-        var settings = false
+        var settings = true //TODO: CHANGE BACK
         var editTracker = false
     
         mutating func setHome(){

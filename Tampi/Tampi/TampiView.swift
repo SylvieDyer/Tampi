@@ -12,8 +12,17 @@ struct TampiView: View {
     
     var body: some View {
         VStack {
-            HStack{
-                Text("Tampi").font(.largeTitle).bold().padding(.leading, 15)
+            HStack(alignment: .lastTextBaseline, spacing:0){
+                Text("Tamp").font(.largeTitle).bold().padding(.leading, 15)
+                     .fontWidth(.expanded)
+                Image(systemName:"balloon.fill")
+                    .resizable()
+                    .rotationEffect(Angle(degrees: 180))
+                    .frame(width: 10, height: 40)
+                    .foregroundColor(.black)
+                    .padding(.leading, 2)
+                 
+                
                 Spacer()
             }
             VStack{ 

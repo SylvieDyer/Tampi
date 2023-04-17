@@ -25,7 +25,7 @@ struct TrackerView: View {
     @State private var formattedDates: String = ""
     
     private func formatSelectedDates() {
-        formatter.dateFormat = "MMM-dd-YY"
+        formatter.dateFormat = "MMM d, yyyy"
         let dates = selectedDates
             .compactMap { date in
                 Calendar.current.date(from: date)
@@ -84,9 +84,24 @@ struct TrackerView: View {
                 
                 HStack{
                     Spacer()
-                    Toggle("Edit", isOn: $tampi.appController.editTracker)
-                        .toggleStyle(.button)
-                        .tint(.indigo)
+                    
+                    Button(action: {}){
+                        Image(systemName: "figure.equestrian.sports")
+                            .resizable()
+                            .frame(width: 100, height: 100)
+                            .aspectRatio(contentMode: .fit)
+                    }
+                    .foregroundColor(.indigo)
+////
+////                    Toggle(isOn: $tampi.appController.editTracker) {
+////                        Text("Edit")
+////                        //                        Label("Edit")
+//////                        Label("Edit", systemImage: "pencil.slash")
+////
+////                    }
+//                    .toggleStyle(.button)
+//                    .tint(.indigo)
+//                    .foregroundColor(.indigo)
                 }
             }
             
