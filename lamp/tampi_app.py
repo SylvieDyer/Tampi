@@ -1,71 +1,224 @@
 import platform
+import lamp_util
+import pigpio
+import os
+import json
 from kivy.app import App
-from kivy.properties import ColorProperty, NumericProperty, StringProperty, BooleanProperty
+from kivy.properties import AliasProperty, BooleanProperty, ColorProperty, NumericProperty, StringProperty
 from kivy.clock import Clock
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
-from lamp_driver import LampDriver
+from paho.mqtt.client import Client
+from tampi_common import *
 import lamp_util
-import pigpio
+
+MQTT_CLIENT_ID= "lamp"
 
 class TampiApp(App):
-    curr_mode = NumericProperty(0)
-    cycle = StringProperty('normal')
-    preset1 = StringProperty('normal')
-    preset2 = StringProperty('normal')
-    brightness = NumericProperty()
-    power = BooleanProperty(False)
-    driver = LampDriver()
+    _updated = False
+    _updatingUI = False
+    curr_mode = NumericProperty()
+    _cycle = StringProperty('normal')
+    _preset1 = StringProperty('normal')
+    _preset2 = StringProperty('normal')
+    _brightness = NumericProperty()
+    lamp_is_on = BooleanProperty()
+
+    def _get_cycle(self):
+        return self._cycle
+
+    def _set_cycle(self, value):
+        self._cycle = value
+        if value == "down":
+            self._preset1 = "normal"
+            self._preset2 = "normal"
+            self.curr_mode = 0
+
+    def _get_preset1(self):
+        return self._preset1
+
+    def _set_preset1(self, value):
+        self._preset1 = value
+        if value == "down":
+            self._cycle = "normal"
+            self._preset2 = "normal"
+            self.curr_mode = 1
+
+    def _get_preset2(self):
+        return self._preset2
+
+    def _set_preset2(self, value):
+        self._preset2 = value
+
+        if value == "down":
+            self._cycle = "normal"
+            self._preset1 = "normal"
+            self.curr_mode = 2
+
+    def _get_brightness(self):
+        return self._brightness
+
+    def _set_brightness(self, value):
+        self._brightness = value
+
+
+    cycle = AliasProperty(_get_cycle, _set_cycle, bind=['_cycle'])
+    preset1 = AliasProperty(_get_preset1, _set_preset1, bind=['_preset1'])
+    preset2 = AliasProperty(_get_preset2, _set_preset2, bind=['_preset2'])
+    brightness = AliasProperty(_get_brightness, _set_brightness, bind=['_brightness'])
+    gpio17_pressed = BooleanProperty(False)
+
+    def on_start(self):
+        self._publish_clock = None
+        self.mqtt_broker_bridge = False
+        self._assocaited = True
+        self.mqtt = Client(client_id=MQTT_CLIENT_ID)
+        self.mqtt.enable_logger()
+        self.mqtt.on_connect = self.on_connect
+        self.mqtt.connect(MQTT_BROKER_HOST, port=MQTT_BROKER_PORT,
+                          keepalive=MQTT_BROKER_KEEP_ALIVE_SECS)
+        self.mqtt.loop_start()
+        self.set_up_GPIO_and_device_status_popup()
 
     def on_cycle(self, instance, value):
-        self._update_lamp_mode(0, self.cycle)
+        if self._updatingUI:
+            return
+
+        if self._publish_clock is None:
+            self._publish_clock = Clock.schedule_once(
+                lambda dt: self._update_lamp_mode(), 0.01)
+        #self._update_lamp_mode(0, self.cycle)
 
     def on_preset1(self, instance, value):
-        #if value == 'down' and (value != self.preset1):
-        self._update_lamp_mode(1, self.preset1)
+        if self._updatingUI:
+            return
+
+        if self._publish_clock is None:
+            self._publish_clock = Clock.schedule_once(
+                lambda dt: self._update_lamp_mode(), 0.01)
 
     def on_preset2(self, instance, value):
-        self._update_lamp_mode(2, self.preset2)
+        if self._updatingUI:
+            return
+
+        if self._publish_clock is None:
+            self._publish_clock = Clock.schedule_once(
+                lambda dt: self._update_lamp_mode(), 0.01)
 
     def on_brightness(self, instance, value):
-        self._update_brightness(self.brightness)
+        if self._updatingUI:
+            return
 
-    def on_power(self, instance, value):
-        self._update_power(self.power)
+        if self._publish_clock is None:
+            self._publish_clock = Clock.schedule_once(
+                lambda dt: self._update_lamp_mode(), 0.01)
 
-    def _update_lamp_mode(self, value, state):
-        self.curr_mode = value
-        if (value == 0):
-            self.cycle = state
-            self.preset1 = 'normal'
-            self.preset2 = 'normal'
-        elif (value == 1):
-            self.cycle = 'normal'
-            self.preset1 = state
-            self.preset2 = 'normal'
-        elif (value == 2):
-            self.cycle = 'normal'
-            self.preset1 = 'normal'
-            self.preset2 = state
-        if self.power:
-            self.driver.set_mode(value)
+    def on_lamp_is_on(self, instance, value):
+        if self._updatingUI:
+            return
 
-    def _update_brightness(self, value):
-        self.brightness = value
-        if self.power:
-            self.driver.set_brightness(value)
+        if self._publish_clock is None:
+            self._publish_clock = Clock.schedule_once(
+                lambda dt: self._update_lamp_mode(), 0.01)
 
-    def _update_power(self, value):
-        self.power = value
-        if value:
-            self.driver.power_on(self.curr_mode)
-        else:
-            self.driver.power_off()
+    def on_connect(self, client, userdata, flags, rc):
+        self.mqtt.publish(client_state_topic(MQTT_CLIENT_ID), b"1",
+                          qos=2, retain=True)
+        self.mqtt.message_callback_add(TOPIC_LAMP_CHANGE_NOTIFICATION,
+                                       self.receive_new_lamp_state)
+        self.mqtt.subscribe(TOPIC_LAMP_CHANGE_NOTIFICATION, qos=1)
+
+
+    def receive_new_lamp_state(self, client, userdata, message):
+        new_state = json.loads(message.payload.decode('utf-8'))
+        Clock.schedule_once(lambda dt: self._update_ui(new_state), 0.01)
+
+    def _update_ui(self, new_state):
+        if self._updated:
+            return
+
+        self._updatingUI = True
+        try:
+            if 'mode' in new_state:
+                self.curr_mode = new_state['mode']
+                if self.curr_mode == 0:
+                    self.cycle = 'down'
+
+                elif self.curr_mode == 1:
+                    self.preset1 = 'down'
+
+                elif self.curr_mode == 2:
+                    self.preset2 = 'down'
+
+            if 'brightness' in new_state:
+                self.brightness = new_state['brightness']
+
+            if 'on' in new_state:
+                self.lamp_is_on = new_state['on']
+        finally:
+            self._updatingUI = False
+
+        self._updated = True
+
+
+    def _update_lamp_mode(self):
+        msg = {'mode': self.curr_mode,
+               'brightness': self._brightness,
+               'on': self.lamp_is_on,
+               'client': MQTT_CLIENT_ID}
+        self.mqtt.publish(TOPIC_SET_LAMP_CONFIG,
+                          json.dumps(msg).encode('utf-8'),
+                          qos=1)
+        self._publish_clock = None
+#    def on_preset1(self, instance, value):
+        #if value == 'down' and (value != self.preset1):
+#        self._update_lamp_mode(1, self.preset1)
+
+#    def on_preset2(self, instance, value):
+#        self._update_lamp_mode(2, self.preset2)
+
+#    def on_brightness(self, instance, value):
+#        self._update_brightness(self.brightness)
+
+#    def on_power(self, instance, value):
+#        self._update_power(self.power)
+
+  #  def _update_lamp_mode(self, value, state):
+  #      self.curr_mode = value
+  #      if (value == 0):
+  #          self.cycle = state
+  #          self.preset1 = 'normal'
+  #          self.preset2 = 'normal'
+  #      elif (value == 1):
+  #          self.cycle = 'normal'
+  #          self.preset1 = state
+  #          self.preset2 = 'normal'
+  #      elif (value == 2):
+  #          self.cycle = 'normal'
+  #          self.preset1 = 'normal'
+  #          self.preset2 = state
+   #     if self.power:
+   #         self.driver.set_mode(value, self.brightness, self.power)
+
+    #def _update_brightness(self, value):
+    #    self.brightness = value
+    #    print("BRIGHTNESS CHANGED " + str(value))
+    #    self.driver.set_mode(self.curr_mode, self.brightness, self.power)
+    #    #if self.power:
+    #    #    self.driver.set_brightness(value)
+
+    #def _update_power(self, value):
+    ##    self.power = value
+     #   self.driver.set_mode(self.curr_mode, self.brightness, self.power)
+#        if value:
+#            self.driver.power_on(self.curr_mode)
+#        else:
+#            self.driver.power_off()
 
     def set_up_GPIO_and_device_status_popup(self):
         self.pi = pigpio.pi()
         self.pi.set_mode(17, pigpio.INPUT)
-        self.pi.set_pull_up_down(17, pigpio_PUD_UP)
+        self.pi.set_pull_up_down(17, pigpio.PUD_UP)
         Clock.schedule_interval(self._poll_GPIO, 0.05)
         self.network_status_popup = self._build_network_status_popup()
         self.network_status_popup.bind(on_open=self.update_device_status_popup)
@@ -77,20 +230,19 @@ class TampiApp(App):
 
     def update_device_status_popup(self, instance):
         interface = "wlan0"
+        print("MAKING CALLS")
         ipaddr = lamp_util.get_ip_address(interface)
         deviceid = lamp_util.get_device_id()
         msg = ("{}: {}\n"
                "DeviceID: {}\n"
-               "Broker Bridged: {}\n"
-               "Async Analytics"
                ).format(
                         interface,
                         ipaddr,
-                        deviceid,
-                        self.mqtt_broker_bridged)
+                        deviceid)
         instance.content.text = msg
 
     def on_gpio17_pressed(self, instance, value):
+        print("BUTTON PRESSED")
         if value:
             self.network_status_popup.open()
         else:

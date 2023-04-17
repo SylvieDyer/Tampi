@@ -34,5 +34,5 @@ BoxLayout:
 
     ToggleButton:
         text: 'Power'
-        state: 'down' if app.power else 'normal'
-        on_state: app.power = True if self.state == 'down' else False
+        state: 'down' if app.lamp_is_on else 'normal'
+        on_state: app.lamp_is_on = True if self.state == 'down' else False
