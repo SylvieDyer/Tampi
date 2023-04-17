@@ -102,8 +102,8 @@ class TampiService(object):
                 self.set_current_mode(new_config['mode'])
             if 'on' in new_config:
                 self.set_current_onoff(new_config['on'])
-            # if 'color' in new_config:
-            #     self.set_current_color(new_config['color'])
+            if 'color' in new_config:
+                 self.set_current_color(new_config['color'])
             if 'brightness' in new_config:
                 self.set_current_brightness(new_config['brightness'])
             self.publish_config_change()
