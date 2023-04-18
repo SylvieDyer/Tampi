@@ -116,7 +116,7 @@ extension Tampi {
     struct LampiState: Equatable {
         var isConnected = false
         var isOn = false
-        var mode: Double = 0.0
+        var mode: Int = 0
     }
     
     struct UserInfo: Equatable {
@@ -260,7 +260,6 @@ extension Tampi: CBCentralManagerDelegate {
 extension Tampi: CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         guard let services = peripheral.services else { return }
-
         for service in services {
             print("Found: \(service)")
             peripheral.discoverCharacteristics(nil, for: service)
@@ -269,10 +268,12 @@ extension Tampi: CBPeripheralDelegate {
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         guard let characteristics = service.characteristics else { return }
-
+        print("START")
+        print(characteristics)
         for characteristic in characteristics {
             switch characteristic.uuid {
             case Tampi.MODE_UUID:
+                print("FOUND MODE")
                 self.lampiModeCharacteristic = characteristic
                 peripheral.readValue(for: characteristic)
                 peripheral.setNotifyValue(true, for: characteristic)
@@ -302,7 +303,6 @@ extension Tampi: CBPeripheralDelegate {
 
         switch characteristic.uuid {
         case Tampi.MODE_UUID:
-
             lampiState.mode = parseMode(for: updatedValue)
 
         case Tampi.POWERSTATE_UUID:
@@ -314,10 +314,12 @@ extension Tampi: CBPeripheralDelegate {
     }
 
     private func parsePowerState(for value: Data) -> Bool {
+        print("CALLED PARSEPOWER")
         return value.first == 1
     }
 
-    private func parseMode(for value: Data) -> Double {
-        return Double(value[0])
+    private func parseMode(for value: Data) -> Int {
+        print("CALLED PARSEMODE")
+        return Int(value[0])
     }
 }
