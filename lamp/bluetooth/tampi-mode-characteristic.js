@@ -5,7 +5,7 @@ var CHARACTERISTIC_NAME = 'mode';
 
 function TampiModeCharacteristic(tampiState) {
   TampiModeCharacteristic.super_.call(this, {
-    uuid: '0003A7D3-D8A4-4FEA-8174-1736E808C066',
+    uuid: '0005A7D3-D8A4-4FEA-8174-1736E808C066',
     properties: ['read', 'write', 'notify'],
     secure: [],
     descriptors: [
@@ -29,7 +29,7 @@ function TampiModeCharacteristic(tampiState) {
         var data = new Buffer(1);
         data.writeUInt8(Math.round(mode));
         this._update(data);
-    } 
+    }
     }
 
   this.tampiState = tampiState;

@@ -12,7 +12,7 @@ from paho.mqtt.client import Client
 from tampi_common import *
 import lamp_util
 
-MQTT_CLIENT_ID= "lamp"
+MQTT_CLIENT_ID= "lamp_ui"
 
 class TampiApp(App):
     _updated = False
@@ -121,6 +121,7 @@ class TampiApp(App):
             self._publish_clock = Clock.schedule_once(
                 lambda dt: self._update_lamp_mode(), 0.01)
 
+
     def on_connect(self, client, userdata, flags, rc):
         self.mqtt.publish(client_state_topic(MQTT_CLIENT_ID), b"1",
                           qos=2, retain=True)
@@ -130,15 +131,18 @@ class TampiApp(App):
 
 
     def receive_new_lamp_state(self, client, userdata, message):
+        print("NEW MESSAGE")
         new_state = json.loads(message.payload.decode('utf-8'))
         Clock.schedule_once(lambda dt: self._update_ui(new_state), 0.01)
 
     def _update_ui(self, new_state):
-        if self._updated:
+        if self._updated and new_state['client'] == MQTT_CLIENT_ID:
+            print("NO UPDATE")
             return
 
         self._updatingUI = True
         try:
+            print("updating UI")
             if 'mode' in new_state:
                 self.curr_mode = new_state['mode']
                 if self.curr_mode == 0:
@@ -151,13 +155,15 @@ class TampiApp(App):
                     self.preset2 = 'down'
 
             if 'brightness' in new_state:
-                self.brightness = new_state['brightness']
+                print("NEW BRIGHTNESS:{}".format(new_state['brightness']))
+                self.brightness = new_state['brightness'] * 100
 
             if 'on' in new_state:
                 self.lamp_is_on = new_state['on']
         finally:
             self._updatingUI = False
 
+        print("NOT UPDATING")
         self._updated = True
 
 

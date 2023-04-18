@@ -7,7 +7,7 @@ process.env['BLENO_DEVICE_NAME'] = 'TAMPI ' + device_id;
 var serviceName = 'TampiService';
 var bleno = require('bleno');
 var mqtt = require('mqtt');
- 
+
 var TampiState = require('./tampi-state');
 var TampiService = require('./tampi-service');
 var DeviceInfoService = require('./device-info-service');
@@ -63,7 +63,7 @@ bleno.on('advertisingStart', function(err) {
 });
 
 function updateRSSI(err, rssi) {
-    console.log('RSSI err: ' + err + ' rssi: ' + rssi);
+    console.log('HERE RSSI err: ' + err + ' rssi: ' + rssi);
     // if we are still connected
     if (bt_clientAddress) {
         // and large change in RSSI
@@ -85,7 +85,7 @@ function updateRSSI(err, rssi) {
 
 bleno.on('accept', function(clientAddress) {
     console.log('accept: ' + clientAddress);
-    bt_clientAddress = clientAddress;    
+    bt_clientAddress = clientAddress;
     bt_lastRssi = 0;
     mqtt_client.publish('lamp/bluetooth', JSON.stringify({
         state: 'connected',
