@@ -34,10 +34,10 @@ class LampDriver(object):
                 self.current = [1, 0, 0]
             # preset 1 mode
             elif state == 1:
-                self.current = [.4, .6, .1]
+                self.current = [.768, .7059, .33]
             # preset 2 mode
             elif state == 2:
-                self.current = [.7, .2, .4]
+                self.current = [0, 1, .2]
 
         for i in range(len(self.current)):
             self.current[i] = self.current[i] * brightness

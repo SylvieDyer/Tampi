@@ -21,8 +21,8 @@ MQTT_CLIENT_ID = "tampi_service"
 FP_DIGITS = 2
 
 CYCLE   = {'h': round(0.00, FP_DIGITS), 's': round(1.00, FP_DIGITS)}
-PRESET1 = {'h': round(0.23, FP_DIGITS), 's': round(0.71, FP_DIGITS)}
-PRESET2 = {'h': round(0.93, FP_DIGITS), 's': round(0.56, FP_DIGITS)}
+PRESET1 = {'h': round(0.141, FP_DIGITS), 's': round(0.92, FP_DIGITS)}
+PRESET2 = {'h': round(0.411, FP_DIGITS), 's': round(1.00, FP_DIGITS)}
 
 
 class InvalidLampConfig(Exception):
@@ -105,7 +105,7 @@ class TampiService(object):
             if 'color' in new_config:
                  self.set_current_color(new_config['color'])
             if 'brightness' in new_config:
-                self.set_current_brightness(new_config['brightness'])
+                self.set_current_brightness(new_config['brightness'] / 100)
             self.publish_config_change()
         except InvalidLampConfig:
             print("error applying new settings " + str(msg.payload))
@@ -144,6 +144,8 @@ class TampiService(object):
         return self.db['brightness']
 
     def set_current_brightness(self, new_brightness):
+        print("set brightness")
+        print(new_brightness)
         if new_brightness < 0 or new_brightness > 1.0:
             raise InvalidLampConfig()
         self.db['brightness'] = round(new_brightness, FP_DIGITS)
