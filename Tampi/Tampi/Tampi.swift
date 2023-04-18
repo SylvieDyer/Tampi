@@ -69,6 +69,8 @@ class Tampi: NSObject, ObservableObject {
 
 extension Tampi {
     // TODO: FRom class may want to change?
+    //       Implement HSV characteristic (to change cylce color)?
+    //       Add brightness (maybe no)
     static let SERVICE_UUID = CBUUID(string: "0001A7D3-D8A4-4FEA-8174-1736E808C066")
     static let POWERSTATE_UUID = CBUUID(string: "0004A7D3-D8A4-4FEA-8174-1736E808C066")
     static let MODE_UUID = CBUUID(string: "0005A7D3-D8A4-4FEA-8174-1736E808C066")
@@ -175,7 +177,7 @@ extension Tampi {
         }
         //TODO: updating on app: each number on calendar will be value in hash table? or somethign that is a listener maybe each on eis a button with an id being the motn and date and we go from there... not sure... easiest thingw ould be to only allow one cucle at once on the calendar page (so if ur period comes from March 27 - April 3, you only see like... half of march and half of april (rather than being able to click an arrow to see ach separately? idk not sure.
         
-        // TODO: Futher thoughts... bc we won't be sending the calendar over BLE, we'll just be sending a value or smthn that will get parsed on the lampi end maybe indicating what color it shold be ? not rly sure how to pass data otherwise , but if eel like passing the info ab where in cycle makes sense to me . also we won't be listening for changes from BLE either for the cycle information
+        // TODO: Futher thoughts... bc we won't be sending the calendar over BLE, we'll just be sending a value or smthn that will get parsed on the lampi end maybe indicating what color it shold be ? not rly sure how to pass data otherwise , but if eel like passing the info ab where in cycle makes sense to me . also we won't be listening for changes from BLE either for the cycle information.                                                              Response: We have some options. We can either send only the HSV from iOS to Lamp (ble characteristic for this exist already, this could also open up custom presets? idk). OR we can send calendar info and do the color calculations Lamp side (may want to go w this if we plan to do smthn on kivy w this info too). Alternatively, we can send both HSV and specific calendar info (days till next? most recent? predicted? etc...)
     }
     
     struct AppController: Equatable{
@@ -218,15 +220,21 @@ extension Tampi {
 }
 
 extension Tampi: CBCentralManagerDelegate {
+    private static let DEVICE_NAME = "TAMPI b827eb3d9134"
+    private static let OUR_SERVICE_UUID = "0001A7D3-D8A4-4FEA-8174-1736E808C066"
+    
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        print("SCANNING>>")
         if central.state == .poweredOn {
-            bluetoothManager?.scanForPeripherals(withServices: [Tampi.SERVICE_UUID])
+            print("POWERED ON??")
+            let services = [CBUUID(string:Tampi.OUR_SERVICE_UUID)]
+            bluetoothManager?.scanForPeripherals(withServices: services)
         }
     }
 
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
-        if peripheral.name == name {
-            print("Found \(name)")
+        if peripheral.name == Tampi.DEVICE_NAME {
+            print("Found \(Tampi.DEVICE_NAME)")
 
             lampiPeripheral = peripheral
 
@@ -238,7 +246,7 @@ extension Tampi: CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         print("Connected to peripheral \(peripheral)")
         peripheral.delegate = self
-        peripheral.discoverServices([Tampi.SERVICE_UUID])
+        peripheral.discoverServices([CBUUID(string:Tampi.OUR_SERVICE_UUID)])
     }
 
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
