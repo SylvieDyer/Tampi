@@ -223,7 +223,7 @@ extension Tampi {
 
 extension Tampi: CBCentralManagerDelegate {
     private static let DEVICE_NAME_L = "TAMPI b827eb3d9134"
-    private static let DEVICE_NAME_S = "LAMPI b827ebdb1727"
+    private static let DEVICE_NAME_S = "TAMPI b827ebdb1727"
     private static let OUR_SERVICE_UUID = "0001A7D3-D8A4-4FEA-8174-1736E808C066"
     
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
