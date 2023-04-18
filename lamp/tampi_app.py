@@ -18,6 +18,7 @@ class TampiApp(App):
     _updated = False
     _updatingUI = False
     curr_mode = NumericProperty()
+    _remainingDays = NumericProperty(20)
     _cycle = StringProperty('normal')
     _preset1 = StringProperty('normal')
     _preset2 = StringProperty('normal')
@@ -61,7 +62,13 @@ class TampiApp(App):
     def _set_brightness(self, value):
         self._brightness = value
 
+    def _get_remainingDays(self):
+        return self._remainingDays
 
+    def _set_remainingDays(self, value):
+        self._remainingDays = 20
+
+    remainingDays = AliasProperty(_get_remainingDays, _set_remainingDays, bind=['_remainingDays'])
     cycle = AliasProperty(_get_cycle, _set_cycle, bind=['_cycle'])
     preset1 = AliasProperty(_get_preset1, _set_preset1, bind=['_preset1'])
     preset2 = AliasProperty(_get_preset2, _set_preset2, bind=['_preset2'])
@@ -168,13 +175,15 @@ class TampiApp(App):
 
 
     def _update_lamp_mode(self):
+        print("update lamp mode: ")
+        print(self._brightness)
         msg = {'mode': self.curr_mode,
                'brightness': self._brightness,
                'on': self.lamp_is_on,
                'client': MQTT_CLIENT_ID}
         self.mqtt.publish(TOPIC_SET_LAMP_CONFIG,
                           json.dumps(msg).encode('utf-8'),
-                          qos=1)
+                          qos=1, retain=True)
         self._publish_clock = None
 
     def set_up_GPIO_and_device_status_popup(self):

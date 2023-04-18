@@ -1,9 +1,10 @@
+
 #:kivy 1.9
 
 BoxLayout:
     canvas.before:
         Color:
-            rgba: 1, 1, 1, 1
+            rgba: 0, 0, 0, 0
         Rectangle:
             pos: self.pos
             size: self.size
@@ -12,6 +13,15 @@ BoxLayout:
 
     Label:
         text: 'Tampi'
+        font_size: 25    
+
+    Label:
+        text: 'There are '+str(app.remainingDays) + ' until the start of the next cycle'
+        text_size: self.width, None
+        size_hint: 1, None
+        height: self.texture_size[1]
+        halign: 'center' 
+        padding: dp(15), dp(30)
 
     ToggleButton:
         text: 'Cycle'
@@ -30,6 +40,7 @@ BoxLayout:
 
     Slider:
         value: app.brightness
+        on_value: app.brightness = self.value
 
     ToggleButton:
         text: 'Power'
