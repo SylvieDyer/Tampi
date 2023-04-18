@@ -41,6 +41,8 @@ class Tampi: NSObject, ObservableObject {
     private var lampiModeCharacteristic: CBCharacteristic?
     // to track the power state of the lampi (TODO: IDK IF WE WANT THIS)
     private var powerStateCharacteristic: CBCharacteristic?
+    // to track the number of days to next cycle
+    private var remaningDaysCharacteristic: CBCharacteristic?
 
     // MARK: State Tracking
     private var skipNextDeviceUpdate = false
