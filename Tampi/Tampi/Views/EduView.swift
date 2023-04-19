@@ -14,6 +14,7 @@ struct EduView: View {
             List {
                 Section{
                     Text("Welcome to the Education Page, \(tampi.userInfo.userName)!").bold().font(.title2)
+                    Text("Explore these medically verified resources to learn more about the menstural cycle:  ").font(.subheadline).bold()
                 }
                 
                 Section {
@@ -23,18 +24,20 @@ struct EduView: View {
                                 .foregroundColor(.teal)
                             Link("More On Premenstrual Syndrome", destination: URL(string:"https://www.mayoclinic.org/diseases-conditions/premenstrual-syndrome/symptoms-causes/syc-20376780")!)
                                 .foregroundColor(.teal)
+                            Link("Your Period in 2 Minutes", destination: URL(string:"https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwiu6c7Lh7b-AhVjJkQIHVV0DSgQtwJ6BAgOEAI&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DWOi2Bwvp6hw&usg=AOvVaw23-I86CCWqGhKGZWnKvZmE")!)
+                                .foregroundColor(.teal)
                         }.bold()
                     
                     Section(header: Text("For Family").font(.title3).fontWeight(.heavy).foregroundColor(.black.opacity(0.58))){ //footer: Text("We will miss you")) {
                         Link("Fostering an Open Discussion About Menstruation", destination: URL(string:"https://mcpress.mayoclinic.org/parenting/dads-daughters-and-talking-about-menstruation-advice-from-an-expert/")!)
                             .foregroundColor(.teal)
-                        Link("Teen Angst or Menstration", destination: URL(string:"https://www.google.com/search?client=safari&rls=en&q=sea+anenome&ie=UTF-8&oe=UTF-8")!)
+                        Link("Talking About Periods with your Child", destination: URL(string:"https://kidshealth.org/en/parents/talk-about-menstruation.html")!)
                             .foregroundColor(.teal)
                         
                     }.bold()
                     
-                    Section(header: Text("For Friends").font(.title3).fontWeight(.heavy).foregroundColor(.black.opacity(0.58)), footer: Text("A lot to learn")) {
-                        Link("When is it ok to ask \"are you on your period\"? ", destination: URL(string:"https://www.google.com/search?client=safari&rls=en&q=sea+anenome&ie=UTF-8&oe=UTF-8")!)
+                    Section(header: Text("For Friends").font(.title3).fontWeight(.heavy).foregroundColor(.black.opacity(0.58))){
+                        Link("How to Support A Friend on Their Period", destination: URL(string:"https://www.thedailystar.net/shout/news/how-be-supportive-friend-her-period-1792009")!)
                             .foregroundColor(.teal)
                     }.bold()
                     
@@ -42,7 +45,6 @@ struct EduView: View {
                 
             }
             .padding(.bottom, 0)
-            
         }
         Spacer()
         
