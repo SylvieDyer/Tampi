@@ -26,6 +26,10 @@ struct EduView: View {
                                 .foregroundColor(.teal)
                             Link("Your Period in 2 Minutes", destination: URL(string:"https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwiu6c7Lh7b-AhVjJkQIHVV0DSgQtwJ6BAgOEAI&url=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DWOi2Bwvp6hw&usg=AOvVaw23-I86CCWqGhKGZWnKvZmE")!)
                                 .foregroundColor(.teal)
+                            Link("Where to Find Free Feminine Products", destination: URL(string:"https://www.goodrx.com/health-topic/womens-health/free-tampons-and-period-menstrual-products")!)
+                                .foregroundColor(.teal)
+                            
+                        
                         }.bold()
                     
                     Section(header: Text("For Family").font(.title3).fontWeight(.heavy).foregroundColor(.black.opacity(0.58))){ //footer: Text("We will miss you")) {

@@ -124,7 +124,7 @@ extension Tampi {
     struct UserInfo: Equatable {
         var newUser = true
         // menstruator
-        var userName: String = "Luis" // DEFAULT FOR NOW
+        var userName: String = "Cyndy" // DEFAULT FOR NOW
         
         var editingUserName: String = ""
         
@@ -188,6 +188,8 @@ extension Tampi {
         var education = false
         var settings = false
         var editTracker = false
+        var preset1 = "Preset1"
+        var preset2 = "Preset2"
     
         mutating func setHome(){
             home = true

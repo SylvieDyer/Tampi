@@ -11,7 +11,7 @@ struct SettingsView: View {
     @ObservedObject var tampi: Tampi
     @State private var showChangeTampiOwner = false
     @State private var showChangePresets = false
-
+    
     var body: some View {
         List {
             Section {
@@ -62,6 +62,31 @@ struct SettingsView: View {
                         Spacer()
                     }
                 }
+                
+                Button("Change Preset Names") {
+                    showChangePresets.toggle()
+                }
+                .sheet(isPresented: $showChangePresets) {
+                    VStack{
+                        SheetView()
+                        Text("Change Name for Preset1:")
+                        HStack{
+                            Spacer()
+                            TextField(
+                                "Enter New Preset1 Name",
+                                text: $tampi.appController.preset1
+                            )
+                            .padding()
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .background(.indigo.opacity(0.2))
+                            .cornerRadius(10)
+                            
+                            Spacer()
+                        }
+                        
+                        Spacer()
+                    }
+                }
             }
                     
             .fontWeight(.heavy)
@@ -85,12 +110,13 @@ struct SheetView: View {
             })
             {
                 HStack{
-                    
                     Image(systemName: "chevron.down")
                         .resizable()
                         .aspectRatio(contentMode: .fit).frame(width: 30, height: 20)
                         .foregroundColor(.black)
                 }
+            
+                
             }
             
             .font(.title)
@@ -109,3 +135,4 @@ struct ContentView_Previews2: PreviewProvider {
             .previewLayout(.device)
     }
 }
+

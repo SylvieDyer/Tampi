@@ -42,7 +42,7 @@ struct TrackerView: View {
 
                 HStack{
                     Spacer()
-                    Button(action: {tampi.appController.editTracker.toggle()}) {
+                    Button(action: {tampi.appController.editTracker.toggle() }) {
                         HStack {
                             Image(systemName: "square.and.pencil")
                             Text("Edit")
@@ -76,15 +76,12 @@ struct TrackerView: View {
     struct SheetView: View {
         @Environment(\.dismiss) var dismiss
         @ObservedObject var tampi: Tampi
-        @State private var selectedDates: Set<DateComponents> = []
+      //  @State private var selectedDates: Set<DateComponents> = []
         
-        private func sendDates(){
-            tampi.userInfo.cycleDates = selectedDates
-        }
         var body: some View {
             HStack{
                 Spacer()
-                Button(action:{ dismiss(); sendDates() }) {
+                Button(action:{ dismiss()}) {
                     HStack{
                         Image(systemName: "chevron.down")
                             .resizable()
@@ -93,12 +90,11 @@ struct TrackerView: View {
                     }
                 }.font(.title)
                 .padding()
-                
             }
             Text("Edit Cycle").font(.title).fontWeight(.bold)
             MultiDatePicker(
                 "Start Date",
-                selection: $selectedDates
+                selection: $tampi.userInfo.cycleDates
             )
             .datePickerStyle(.graphical)
             .tint(.purple)

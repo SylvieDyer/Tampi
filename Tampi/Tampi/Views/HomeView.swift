@@ -87,7 +87,7 @@ struct HomeView: View{
                             .foregroundColor(.yellow.opacity(0.7))
                         
                         
-                        Text("Preset 1")
+                        Text("\(tampi.appController.preset1)")
                             .foregroundColor(tampi.lampiState.mode == 1 ? .yellow.opacity(0.7) : .gray).font(.title3).fontWeight(.heavy)
                     }
                 }
@@ -101,7 +101,7 @@ struct HomeView: View{
                             .aspectRatio(contentMode: .fit).frame(width: 30, height: 20)
                             .foregroundColor(.green.opacity(0.7))
                         
-                        Text("Preset 2")
+                        Text("\(tampi.appController.preset2)")
                             .foregroundColor(tampi.lampiState.mode == 2 ? .green.opacity(0.7) : .gray).font(.title3).fontWeight(.heavy)
                     }
                     
