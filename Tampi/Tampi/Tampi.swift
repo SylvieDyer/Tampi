@@ -133,10 +133,10 @@ extension Tampi {
         
         // TODO: how to hold the dates: maybe hold the current cycle in this struct, and then generate calendar stuff elsewhere?
         // TODO: ORRRR, use a hashtable with a deafaulf of 31 keys where the values will be boleans to indicate period or not?
-        var cycleInfo: [Int: Bool] = [:]
+        //var cycleInfo: [Int: Bool] = [:]
         
         var dayOne = Date()
-        var cycleDates: Set<DateComponents> = []
+        var cycleDates: Set<String> = ["4/16/2023", "4/14/2023", "4/15/2023", "4/17/2023"]
         
 //        var setDates: Set<DateComponents>{
 //            //return dates
@@ -144,33 +144,33 @@ extension Tampi {
         
         let formatter = DateFormatter()
 
-        
-        var formatSelectedDates: String {
-            var formattedDates: String = ""
-            formatter.dateFormat = "MMM d, yyyy"
-            let dates = cycleDates
-                .compactMap { date in
-                    Calendar.current.date(from: date)
-                }
-                .map { date in
-                    formatter.string(from: date)
-                }
-            formattedDates = dates.joined(separator: "\n")
-            
-            return formattedDates
-        }
+//        
+//        var formatSelectedDates: String {
+//            var formattedDates: String = ""
+//            formatter.dateFormat = "MMM d, yyyy"
+//            let dates = cycleDates
+//                .compactMap { date in
+//                    Calendar.current.date(from: date)
+//                }
+//                .map { date in
+//                    formatter.string(from: date)
+//                }
+//            formattedDates = dates.joined(separator: "\n")
+//            
+//            return formattedDates
+//        }
         
         mutating func resetEditPlaceholder() {
             editingUserName = userName
         }
         
-        init(){
-            // to set up the hash table with dates
-            for i in 1 ... 31 {
-                cycleInfo[i] = false
-            }
-            editingUserName = userName
-        }
+//        init(){
+//            // to set up the hash table with dates
+//            for i in 1 ... 31 {
+//                cycleInfo[i] = false
+//            }
+//            editingUserName = userName
+//        }
         
         //TODO: add the math and such
         var daysUntilNewCycle: Int{

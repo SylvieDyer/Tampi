@@ -56,8 +56,6 @@ struct TampiView: View {
                 .frame(width: 100)
                 .background(tampi.appController.home ? .white.opacity(0.3) : .clear)
                 
-                
-              //  Spacer()
                 Button(action: {
                     tampi.appController.setTracker()
                 }) {
@@ -71,7 +69,6 @@ struct TampiView: View {
                 .frame(width: 100)
                 .background(tampi.appController.tracker ? .white.opacity(0.3) : .clear)
                 
-              //  Spacer()
                 Button(action: {
                     tampi.appController.setEducation()
                 }) {
@@ -85,7 +82,6 @@ struct TampiView: View {
                 .frame(width: 100)
                 .background(tampi.appController.education ? .white.opacity(0.3) : .clear)
                 
-              //  Spacer()
                 Button(action: {
                     tampi.appController.setSettings()
                 }) {
@@ -101,10 +97,6 @@ struct TampiView: View {
                 
              
             }.background(Color.indigo.opacity(0.25).edgesIgnoringSafeArea(.bottom))
-                
-             
-                
-            
         }
         
     }
