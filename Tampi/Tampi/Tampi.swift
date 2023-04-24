@@ -183,8 +183,8 @@ extension Tampi {
     }
     
     struct AppController: Equatable{
-        var home = true
-        var tracker = false  //TODO: CHANGE BACK
+        var home = false
+        var tracker = true  //TODO: CHANGE BACK
         var education = false
         var settings = false
         var editTracker = false

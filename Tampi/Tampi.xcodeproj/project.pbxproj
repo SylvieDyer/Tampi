@@ -17,6 +17,8 @@
 		5A4BDD8029DCA7E100E0797B /* EduView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4BDD7F29DCA7E100E0797B /* EduView.swift */; };
 		5A4BDD8229DCA81E00E0797B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4BDD8129DCA81E00E0797B /* SettingsView.swift */; };
 		5A4BDD8429DCC7AD00E0797B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4BDD8329DCC7AD00E0797B /* ViewController.swift */; };
+		5A67A60C29F5F1A300C4D9C6 /* ElegantCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 5A67A60B29F5F1A300C4D9C6 /* ElegantCalendar */; };
+		5A67A60E29F5F24E00C4D9C6 /* ElegantCalendar.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5A67A60D29F5F24E00C4D9C6 /* ElegantCalendar.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +34,7 @@
 		5A4BDD7F29DCA7E100E0797B /* EduView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EduView.swift; sourceTree = "<group>"; };
 		5A4BDD8129DCA81E00E0797B /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		5A4BDD8329DCC7AD00E0797B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		5A67A60D29F5F24E00C4D9C6 /* ElegantCalendar.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = ElegantCalendar.xcassets; path = "../../../../Library/Developer/Xcode/DerivedData/Tampi-fpyicmcnilywhufwugwfnbhntybz/SourcePackages/checkouts/ElegantCalendar/ElegantCalendar.xcassets"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,6 +42,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A67A60C29F5F1A300C4D9C6 /* ElegantCalendar in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -48,6 +52,7 @@
 		5A4BDD5C29DB759500E0797B = {
 			isa = PBXGroup;
 			children = (
+				5A67A60D29F5F24E00C4D9C6 /* ElegantCalendar.xcassets */,
 				5A4BDD6729DB759500E0797B /* Tampi */,
 				5A4BDD6629DB759500E0797B /* Products */,
 			);
@@ -111,6 +116,9 @@
 			dependencies = (
 			);
 			name = Tampi;
+			packageProductDependencies = (
+				5A67A60B29F5F1A300C4D9C6 /* ElegantCalendar */,
+			);
 			productName = Tampi;
 			productReference = 5A4BDD6529DB759500E0797B /* Tampi.app */;
 			productType = "com.apple.product-type.application";
@@ -139,6 +147,9 @@
 				Base,
 			);
 			mainGroup = 5A4BDD5C29DB759500E0797B;
+			packageReferences = (
+				5A67A60A29F5F1A300C4D9C6 /* XCRemoteSwiftPackageReference "ElegantCalendar" */,
+			);
 			productRefGroup = 5A4BDD6629DB759500E0797B /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -155,6 +166,7 @@
 			files = (
 				5A4BDD7029DB759600E0797B /* Preview Assets.xcassets in Resources */,
 				5A4BDD6D29DB759600E0797B /* Assets.xcassets in Resources */,
+				5A67A60E29F5F24E00C4D9C6 /* ElegantCalendar.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -381,6 +393,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		5A67A60A29F5F1A300C4D9C6 /* XCRemoteSwiftPackageReference "ElegantCalendar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ThasianX/ElegantCalendar";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5A67A60B29F5F1A300C4D9C6 /* ElegantCalendar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5A67A60A29F5F1A300C4D9C6 /* XCRemoteSwiftPackageReference "ElegantCalendar" */;
+			productName = ElegantCalendar;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 5A4BDD5D29DB759500E0797B /* Project object */;
 }

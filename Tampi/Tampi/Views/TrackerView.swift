@@ -8,60 +8,87 @@
 import SwiftUI
 import UIKit
 import UniformTypeIdentifiers
+import ElegantCalendar
 
 struct TrackerView: View {
     @ObservedObject var tampi: Tampi
+    // Start & End date should be configured based on your needs.
+
     
+      @ObservedObject var calendarManager = MonthlyCalendarManager(
+        configuration: CalendarConfiguration(startDate: Date().addingTimeInterval(TimeInterval(60 * 60 * 24 * (-30 * 36))),
+                                             endDate: Date().addingTimeInterval(TimeInterval(60 * 60 * 24 * (30 * 36)))))
+
+    
+    @State private var calendarTheme: CalendarTheme = .fluorescentPink
+
     var body: some View {
-        List {
+        List{
             
             Section{
                 Text("Welcome to the Tracker Page!").bold().font(.title2)
                 
-      
-                    Text("Here, you can view your cycle")
-                        .foregroundColor(.gray).fontWeight(.semibold)
-//                    Text("**your** ")
-//                        .foregroundColor(.purple) +
-//                    Text("cycle!")
-//                        .foregroundColor(.gray).fontWeight(.semibold)
                 
+                Text("Here, you can view your cycle")
+                    .foregroundColor(.gray).fontWeight(.semibold)
             }
             
-            Section{
-                MultiDatePicker(
-                    "Start Date",
-                    selection: $tampi.userInfo.cycleDates
-                )
-//                .onChange(of: tampi.userInfo.cycleDates, perform: { _ in
-//                    $tampi.formatSelectedDates
-//                })
-                .datePickerStyle(.graphical)
-                .tint(.purple)
-                .disabled(true)
-
-                HStack{
-                    Spacer()
-                    Button(action: {tampi.appController.editTracker.toggle() }) {
-                        HStack {
-                            Image(systemName: "square.and.pencil")
-                            Text("Edit")
-                        }.foregroundColor(.indigo)
-                    }.sheet(isPresented: $tampi.appController.editTracker) {
-                        VStack{
-                            SheetView(tampi: tampi)
+            //            Section{
+          
+                
+                
+                MonthlyCalendarView(calendarManager: calendarManager).theme(calendarTheme).frame(height: 600)
+                VStack{
+                 Spacer()
+                    HStack{
+                        
+                        Button(action: {tampi.appController.editTracker.toggle() }){
+                            HStack {
+                                Image(systemName: "square.and.pencil")
+                                Text("Edit").font(.title3)
+                            }.foregroundColor(.indigo).frame(height:20)
+                        }.sheet(isPresented: $tampi.appController.editTracker) {
+                            VStack{
+                                SheetView(tampi: tampi)
+                            }
                         }
-                    }
-                }
+                    }.padding(10)
+                  
+                
+                    
+                
+                //TODO: the date select- edit on multidate picker, then it gets sent here?
+                //                public protocol ElegantCalendarDataSource: MonthlyCalendarDataSource, YearlyCalendarDataSource { }
+                //
+                //                public protocol MonthlyCalendarDataSource {
+                //
+                //                    func calendar(backgroundColorOpacityForDate date: Date) -> Double
+                //                    func calendar(canSelectDate date: Date) -> Bool
+                //                    func calendar(viewForSelectedDate date: Date, dimensions size: CGSize) -> AnyView
+                //
+                //                }
+                
+                
+                
+                //                MonthlyCalendarView(calendarManager: calendarManager)
+                //                MultiDatePicker(
+                //                    "Start Date",
+                //                    selection: $tampi.userInfo.cycleDates
+                //                )
+                ////                .onChange(of: tampi.userInfo.cycleDates, perform: { _ in
+                ////                    $tampi.formatSelectedDates
+                ////                })
+                //                .datePickerStyle(.graphical)
+                //                .tint(.purple)
+                //                .disabled(true)
             }
             
-            Section {
-                Text("Key Dates this Month:").fontWeight(.bold)
-                LazyVStack(alignment: .leading) {
-                    Text(tampi.userInfo.formatSelectedDates)
-                }
-            }
+            
+            
         }
+            
+            
+//        }
         
     }
     
@@ -102,4 +129,34 @@ struct TrackerView: View {
             Spacer()
         }
     }
+}
+
+
+extension TrackerView: MonthlyCalendarDataSource {
+
+    func calendar(backgroundColorOpacityForDate date: Date) -> Double {
+//        let startOfDay = currentCalendar.startOfDay(for: date)
+//        print(Double((visitsByDay[startOfDay]?.count ?? 0) + 3) / 15.0)
+//        return Double((visitsByDay[startOfDay]?.count ?? 0) + 3) / 15.0
+        
+        return Double(date.ISO8601Format().count) / 5.0
+    }
+
+    func calendar(canSelectDate date: Date) -> Bool {
+        return date.timeIntervalSinceReferenceDate != 5
+    }
+
+}
+
+
+extension TrackerView: MonthlyCalendarDelegate {
+
+    func calendar(didSelectDay date: Date) {
+        print("Selected date: \(date)")
+    }
+
+    func calendar(willDisplayMonth date: Date) {
+        print("Will show month: \(date)")
+    }
+
 }
