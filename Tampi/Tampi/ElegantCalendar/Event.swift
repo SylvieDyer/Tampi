@@ -57,7 +57,6 @@ private extension Calendar {
         for dateString in tampi.userInfo.cycleDates {
             cycleEvents.append(.mock(withDate: formatter.date(from: dateString)!,withDateString: dateString))
         }
-       
         return cycleEvents
     }
     

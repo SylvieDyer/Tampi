@@ -30,7 +30,7 @@ struct TrackerView: View {
                     start: .daysFromToday(-30*36),
                     end: .daysFromToday(30*36), tampi:tampi),
                 initialMonth: Date(), tampi: tampi).frame(height: 600)
-//
+
                 VStack{
                  Spacer()
                     HStack{
@@ -52,13 +52,6 @@ struct TrackerView: View {
         }
     }
     
-    // delete later:
-    struct ContentView_Previews2: PreviewProvider {
-        static var previews: some View {
-            TampiView(tampi: Tampi(name: "LAMPI b827ebdb1217"))
-                .previewDevice("iPhone 12 Pro")
-                .previewLayout(.device)
-        }}
     
     struct SheetView: View {
         @Environment(\.dismiss) var dismiss
@@ -94,5 +87,14 @@ struct TrackerView: View {
 
             Spacer()
         }
+    }
+}
+
+// delete later:
+struct TrackerView_Preview: PreviewProvider {
+    static var previews: some View {
+        TampiView(tampi: Tampi(name: "LAMPI b827ebdb1217"))
+            .previewDevice("iPhone 12 Pro")
+            .previewLayout(.device)
     }
 }
