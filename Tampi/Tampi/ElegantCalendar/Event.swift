@@ -11,34 +11,37 @@ struct Event {
     let tagColor: Color
     let arrivalDate: Date
     let departureDate: Date
+    let dateString: String
 
     var notes: String {
         "crying" + " ➝ " + "bleeding"
     }
 }
 
+// TODO: NEED THIS ? each date should be identifiable by datStrign (ONLY PREIOD FOR NOW)
 extension Event: Identifiable {
 
-    var id: Int {
-        UUID().hashValue
+    var id: String {
+        dateString
     }
 }
 
 extension Event {
 
     // create the individual event with an input date
-    static func mock(withDate date: Date) -> Event {
+    static func mock(withDate date: Date, withDateString dateString: String) -> Event {
         Event(eventName: "Period",
               tagColor: .randomColor,
               arrivalDate: date,
-              departureDate: date.addingTimeInterval(60*60))
+              departureDate: date.addingTimeInterval(60*60),
+              dateString: dateString)
     }
 
-    // populate the calendar
-    static func mocks(start: Date, end: Date) -> [Event] {
-        currentCalendar.generateVisits(
+//    // populate the calendar
+    static func mocks(start: Date, end: Date, tampi: Tampi) -> [Event] {
+        currentCalendar.markPeriods(
             start: start,
-            end: end)
+            end: end, tampi: tampi)
     }
 }
 
@@ -46,31 +49,43 @@ fileprivate let visitCountRange = 1...20
 
 private extension Calendar {
     
-    func generateVisits(start: Date, end: Date) -> [Event] {
+    func markPeriods(start: Date, end:Date, tampi:Tampi)-> [Event]{
         var cycleEvents = [Event]()
         let formatter = DateFormatter()
-        formatter.dateFormat = "YYYYMMDD"
         
-        enumerateDates(
-            startingAfter: start,
-            matching: .everyDay,
-            matchingPolicy: .nextTime) { date, _, stop in
-                if let date = date {
-                    
-//                    print(date.formatted(.dateTime).dropLast(10))
-//                    print("Date Time \(date.formatted(.dateTime))")
-                    // 2025-04-24 04:00:00 +0000 (for ex.)
-                    if date < end {
-                        for _ in 0..<Int.random(in: visitCountRange) {
-                            cycleEvents.append(.mock(withDate: date))
-                        }
-                    } else {
-                        stop = true
-                    }
-                }
-            }
+        formatter.dateFormat = "MM/DD/YYYY"
+        for dateString in tampi.userInfo.cycleDates {
+            cycleEvents.append(.mock(withDate: formatter.date(from: dateString)!,withDateString: dateString))
+        }
+       
         return cycleEvents
     }
+    
+//    func generateVisits(start: Date, end: Date) -> [Event] {
+//        var cycleEvents = [Event]()
+//        let formatter = DateFormatter()
+//        formatter.dateFormat = "YYYYMMDD"
+//
+//        enumerateDates(
+//            startingAfter: start,
+//            matching: .everyDay,
+//            matchingPolicy: .nextTime) { date, _, stop in
+//                if let date = date {
+//
+////                    print(date.formatted(.dateTime).dropLast(10))
+////                    print("Date Time \(date.formatted(.dateTime))")
+//                    // 2025-04-24 04:00:00 +0000 (for ex.)
+//                    if date < end {
+//                        for _ in 0..<Int.random(in: visitCountRange) {
+//                            cycleEvents.append(.mock(withDate: date))
+//                        }
+//                    } else {
+//                        stop = true
+//                    }
+//                }
+//            }
+//        return cycleEvents
+//    }
 //    
 //    func compareDates(dayOne: Date, dayTwo: Date) -> Bool {
 //        

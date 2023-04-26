@@ -15,8 +15,8 @@ struct CalendarView: View {
     init(ascVisits: [Event], initialMonth: Date?, tampi: Tampi) {
         let configuration = CalendarConfiguration(
             calendar: currentCalendar,
-            startDate: ascVisits.first!.arrivalDate,
-            endDate: ascVisits.last!.arrivalDate)
+            startDate: .daysFromToday(-365),
+            endDate: .daysFromToday(365*2))
 
         calendarManager = MonthlyCalendarManager(
             configuration: configuration,
@@ -31,10 +31,10 @@ struct CalendarView: View {
     }
 
     var body: some View {
-        ZStack {
+       
             MonthlyCalendarView(calendarManager: calendarManager)
                 .theme(calendarTheme)
-        }
+       
     }
 }
 
@@ -48,9 +48,6 @@ extension CalendarView: MonthlyCalendarDataSource {
         else {
             return 0
         }
-//
-//        let startOfDay = currentCalendar.startOfDay(for: date)
-//        return Double((visitsByDay[startOfDay]?.count ?? 0) + 3) / 15.0
     }
 
     func calendar(canSelectDate date: Date) -> Bool {
@@ -85,8 +82,9 @@ extension CalendarView: MonthlyCalendarDelegate {
 }
 
 struct CalendarView_Previews: PreviewProvider {
+    static var tampi = Tampi(name: "LAMPI b827ebdb1217")
     static var previews: some View {
-        CalendarView(ascVisits: Event.mocks(start: .daysFromToday(-365), end: .daysFromToday(365*2)), initialMonth: nil, tampi: Tampi(name: "LAMPI b827ebdb1217"))
+        CalendarView(ascVisits: Event.mocks(start: .daysFromToday(-365), end: .daysFromToday(365*2), tampi: tampi), initialMonth: nil, tampi: tampi)
     }
 }
 

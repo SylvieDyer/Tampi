@@ -17,15 +17,18 @@ struct TrackerView: View {
         List{
             Section{
                 Text("Welcome to the Tracker Page!").bold().font(.title2)
-                
-                Text("Here, you can view your cycle")
-                    .foregroundColor(.gray).fontWeight(.semibold)
+                VStack(alignment: .leading){
+                    Text("Here, you can view your cycle")
+                        .foregroundColor(.gray).fontWeight(.semibold)
+                    
+                    Text("Aided by ElegantCalendar, by Kevin Li").foregroundColor(.gray).font(.subheadline)
+                }
             }
             
             CalendarView(
                 ascVisits: Event.mocks(
                     start: .daysFromToday(-30*36),
-                    end: .daysFromToday(30*36)),
+                    end: .daysFromToday(30*36), tampi:tampi),
                 initialMonth: Date(), tampi: tampi).frame(height: 600)
 //
                 VStack{
@@ -60,12 +63,18 @@ struct TrackerView: View {
     struct SheetView: View {
         @Environment(\.dismiss) var dismiss
         @ObservedObject var tampi: Tampi
-      //  @State private var selectedDates: Set<DateComponents> = []
+        @State private var selectedDates: Set<DateComponents> = []
         
+        func updateCycle(){
+            for date in tampi.userInfo.editCycleDates{
+                print(date.date?.formatted())
+            }
+            
+        }
         var body: some View {
             HStack{
                 Spacer()
-                Button(action:{ dismiss()}) {
+                Button(action:{ dismiss(); updateCycle()}) {
                     HStack{
                         Image(systemName: "chevron.down")
                             .resizable()
@@ -76,12 +85,12 @@ struct TrackerView: View {
                 .padding()
             }
             Text("Edit Cycle").font(.title).fontWeight(.bold)
-//            MultiDatePicker(
-//                "Start Date",
-//                selection: $tampi.userInfo.cycleDates
-//            )
-//            .datePickerStyle(.graphical)
-//            .tint(.purple)
+            MultiDatePicker(
+                "Start Date",
+                selection: $tampi.userInfo.editCycleDates
+            )
+            .datePickerStyle(.graphical)
+            .tint(.purple)
 
             Spacer()
         }

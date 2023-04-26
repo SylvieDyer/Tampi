@@ -52,6 +52,7 @@ struct VisitsListView: View {
     private var visitsPreviewList: some View {
         VStack(spacing: 0) {
             ForEach(cycleEvents[range]) { event in
+
                 CycleEvent(event: event)
             }
         }
@@ -59,10 +60,10 @@ struct VisitsListView: View {
 
 }
 
-struct VisitsListView_Previews: PreviewProvider {
-    static var previews: some View {
-        DarkThemePreview {
-            VisitsListView(cycleEvents: Event.mocks(start: Date(), end: .daysFromToday(2)), height: 300)
-        }
-    }
-}
+//struct VisitsListView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        DarkThemePreview {
+//            VisitsListView(cycleEvents: Event.mocks(start: Date(), end: .daysFromToday(2)), height: 300)
+//        }
+//    }
+//}

@@ -44,11 +44,11 @@ private extension CycleEvent {
     }
 
 }
-
-struct VisitCell_Previews: PreviewProvider {
-    static var previews: some View {
-        DarkThemePreview {
-            CycleEvent(event: .mock(withDate: Date()))
-        }
-    }
-}
+//
+//struct VisitCell_Previews: PreviewProvider {
+//    static var previews: some View {
+//        DarkThemePreview {
+//            CycleEvent(event: .mock(withDate: Date()))
+//        }
+//    }
+//}

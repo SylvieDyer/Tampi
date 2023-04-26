@@ -6,7 +6,7 @@ import SwiftUI
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-
+    var tampi = Tampi(name: "LAMPI b827ebdb1217")
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         if let windowScene = scene as? UIWindowScene {
@@ -14,8 +14,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             window.rootViewController = UIHostingController(rootView: CalendarView(
                 ascVisits: Event.mocks(
                     start: .daysFromToday(-30*36),
-                    end: .daysFromToday(30*36)),
-                initialMonth: Date(), tampi: Tampi(name: "LAMPI b827ebdb1217")))
+                    end: .daysFromToday(30*36),
+                    tampi: tampi),
+                initialMonth: Date(), tampi: tampi))
             self.window = window
             window.makeKeyAndVisible()
         }
