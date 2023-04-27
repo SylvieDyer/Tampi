@@ -122,78 +122,69 @@ extension Tampi {
     }
     
     struct UserInfo: Equatable {
-        var newUser = true
+        var newUser = true //TODO: CHANG BACK
         // menstruator
-        var userName: String = "Cyndy" // DEFAULT FOR NOW
-        
-        var editingUserName: String = ""
+        var userName: String = ""
         
         // average cycle length - defaults at 28
-        var averageCycleLength: Double = 28
+        var averageCycleLength: Int = 28
         
-        // TODO: how to hold the dates: maybe hold the current cycle in this struct, and then generate calendar stuff elsewhere?
-        // TODO: ORRRR, use a hashtable with a deafaulf of 31 keys where the values will be boleans to indicate period or not?
-        //var cycleInfo: [Int: Bool] = [:]
+        // average period length
+        var periodLength: Int = 5
         
-        var dayOne = Date()
-        var editCycleDates: Set<DateComponents> = [
-            // testing dates (correspond to the dates below)
-//            DateComponents(year: 2023, month: 4, day: 14),
-//            DateComponents(year: 2023, month: 4, day: 15),
-//            DateComponents(year: 2023, month: 4, day: 16),
-//            DateComponents(year: 2023, month: 4, day: 17),
-        ]
-        var cycleDates: Set<String> = [
-            //"4/14/2023", "4/15/2023", "4/16/2023", "4/17/2023"
-        ]
+        // the period dates "4/4/2023"
+        var cycleDates: Set<String> = []
         
-//        var setDates: Set<DateComponents>{
-//            //return dates
-//        }
+        // preiod dates when editing the dates of the period
+        var editCycleDates: Set<DateComponents> = []
         
-        let formatter = DateFormatter()
-
-//        
-//        var formatSelectedDates: String {
-//            var formattedDates: String = ""
-//            formatter.dateFormat = "MMM d, yyyy"
-//            let dates = cycleDates
-//                .compactMap { date in
-//                    Calendar.current.date(from: date)
-//                }
-//                .map { date in
-//                    formatter.string(from: date)
-//                }
-//            formattedDates = dates.joined(separator: "\n")
-//            
-//            return formattedDates
-//        }
-        
-        mutating func resetEditPlaceholder() {
-            editingUserName = userName
+        // calculates the first day of the period based on the length
+        var dayOne: String {
+            cycleDates.sorted()[cycleDates.count - periodLength]
         }
         
-//        init(){
-//            // to set up the hash table with dates
-//            for i in 1 ... 31 {
-//                cycleInfo[i] = false
-//            }
-//            editingUserName = userName
-//        }
+        // the the days fo the next cycle
+        var nextCycle: Set<Date> = []
         
-        //TODO: add the math and such
+        // predicts the next period, based on length and cycle length
+        mutating func predict(){
+            // predict when there is user data
+            if (!cycleDates.isEmpty){
+                
+                let formatter = DateFormatter()
+                formatter.dateFormat = "M/dd/yyyy"
+                
+                // determine the start of the next cycle
+                let newDayOne = Calendar.current.date(byAdding: .day, value: averageCycleLength, to: formatter.date(from: dayOne)!)
+                nextDayOne = newDayOne!
+                nextCycle = [nextDayOne]
+                
+                // mark the predicted period 
+                for i in 1...periodLength-1 {
+                    nextCycle.insert(Calendar.current.date(byAdding: .day, value: i, to: newDayOne!)!)
+                }
+            }
+        }
+        
+        // the start of the next cycle
+        var nextDayOne: Date = Date()
+        
+        // finds the days until the next cycle
         var daysUntilNewCycle: Int{
+            // if no user information has been put in, put fake value
+            if (cycleDates.isEmpty){
+                return 666
+            }
             // dayOne+ averageCycleLength
-            return 20
+            return Int(nextDayOne.timeIntervalSince(Date())/86400)
         }
-        //TODO: updating on app: each number on calendar will be value in hash table? or somethign that is a listener maybe each on eis a button with an id being the motn and date and we go from there... not sure... easiest thingw ould be to only allow one cucle at once on the calendar page (so if ur period comes from March 27 - April 3, you only see like... half of march and half of april (rather than being able to click an arrow to see ach separately? idk not sure.
-        
-        // TODO: Futher thoughts... bc we won't be sending the calendar over BLE, we'll just be sending a value or smthn that will get parsed on the lampi end maybe indicating what color it shold be ? not rly sure how to pass data otherwise , but if eel like passing the info ab where in cycle makes sense to me . also we won't be listening for changes from BLE either for the cycle information.                                                              Response: We have some options. We can either send only the HSV from iOS to Lamp (ble characteristic for this exist already, this could also open up custom presets? idk). OR we can send calendar info and do the color calculations Lamp side (may want to go w this if we plan to do smthn on kivy w this info too). Alternatively, we can send both HSV and specific calendar info (days till next? most recent? predicted? etc...)
+    
     }
     
+    // to control the app & page being shown
     struct AppController: Equatable{
-        var home = false
-        var tracker = true  //TODO: CHANGE BACK
+        var home = true
+        var tracker = false
         var education = false
         var settings = false
         var editTracker = false
@@ -228,7 +219,6 @@ extension Tampi {
             education = false
             
         }
-        
     }
 }
 

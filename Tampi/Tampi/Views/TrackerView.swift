@@ -33,6 +33,9 @@ struct TrackerView: View {
         
         // ensure the changes are saved when the datepicker is opened again
         tampi.userInfo.editCycleDates = selectedDates
+        
+        // predicts the next cycle
+        tampi.userInfo.predict()
     }
   
     var body: some View {
@@ -42,7 +45,7 @@ struct TrackerView: View {
                 Text("Welcome to the Tracker Page!").bold().font(.title2)
                 VStack(alignment: .leading){
                     Text("Here, you can view your cycle")
-                        .foregroundColor(.gray).fontWeight(.semibold)
+                        .foregroundColor(.black.opacity(0.7)).fontWeight(.semibold)
                     
                     Text("Aided by ElegantCalendar, by Kevin Li").foregroundColor(.gray).font(.subheadline)
                 }
@@ -50,6 +53,12 @@ struct TrackerView: View {
             
             // calendar and edit
             Section{
+//                Button (action: {
+//                    
+//                    print(tampi.userInfo.nextCycle)
+//                }) {
+//                    Text("TEST")
+//                }
                 HStack{
                     Button(action: {
                         // open the sheet
@@ -93,12 +102,14 @@ struct TrackerView: View {
                 
                 HStack{
                     Spacer()
-                    
                     CalendarView(
-                        ascVisits: Event.mocks(
+                        ascVisits: Event.addEvents(
                             start: .daysFromToday(-30*36),
                             end: .daysFromToday(30*36), tampi: tampi),
-                        initialMonth: Date(), withDates: $tampi.userInfo.cycleDates).frame(height: 600)
+                        initialMonth: Date(),
+                        withTampi: tampi,
+                        withDates: $tampi.userInfo.cycleDates)
+                    .frame(height: 600)
                     Spacer()
                 }.padding(10)
                 

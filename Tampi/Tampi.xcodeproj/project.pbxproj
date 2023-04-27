@@ -19,6 +19,7 @@
 		5A4BDD8429DCC7AD00E0797B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4BDD8329DCC7AD00E0797B /* ViewController.swift */; };
 		5A67A60C29F5F1A300C4D9C6 /* ElegantCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 5A67A60B29F5F1A300C4D9C6 /* ElegantCalendar */; };
 		5A67A60E29F5F24E00C4D9C6 /* ElegantCalendar.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5A67A60D29F5F24E00C4D9C6 /* ElegantCalendar.xcassets */; };
+		5A99524229FAF8FD005B6486 /* UserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A99524129FAF8FD005B6486 /* UserInfoView.swift */; };
 		5AE5CA0929F6F86600718779 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE5CA0829F6F86600718779 /* CalendarView.swift */; };
 		5AE5CA0B29F6F8A700718779 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE5CA0A29F6F8A700718779 /* Event.swift */; };
 		5AE5CA0D29F6F8B600718779 /* CycleEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE5CA0C29F6F8B600718779 /* CycleEvent.swift */; };
@@ -43,6 +44,7 @@
 		5A4BDD8129DCA81E00E0797B /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		5A4BDD8329DCC7AD00E0797B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		5A67A60D29F5F24E00C4D9C6 /* ElegantCalendar.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = ElegantCalendar.xcassets; path = "../../../../Library/Developer/Xcode/DerivedData/Tampi-fpyicmcnilywhufwugwfnbhntybz/SourcePackages/checkouts/ElegantCalendar/ElegantCalendar.xcassets"; sourceTree = "<group>"; };
+		5A99524129FAF8FD005B6486 /* UserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoView.swift; sourceTree = "<group>"; };
 		5AE5CA0829F6F86600718779 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		5AE5CA0A29F6F8A700718779 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		5AE5CA0C29F6F8B600718779 /* CycleEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CycleEvent.swift; sourceTree = "<group>"; };
@@ -113,6 +115,7 @@
 				5A4BDD7D29DCA77400E0797B /* TrackerView.swift */,
 				5A4BDD7F29DCA7E100E0797B /* EduView.swift */,
 				5A4BDD8129DCA81E00E0797B /* SettingsView.swift */,
+				5A99524129FAF8FD005B6486 /* UserInfoView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -224,6 +227,7 @@
 				5A4BDD7E29DCA77400E0797B /* TrackerView.swift in Sources */,
 				5A4BDD8429DCC7AD00E0797B /* ViewController.swift in Sources */,
 				5AE5CA1129F6F8EC00718779 /* VisitPreviewConstants.swift in Sources */,
+				5A99524229FAF8FD005B6486 /* UserInfoView.swift in Sources */,
 				5A4BDD7929DB786300E0797B /* Tampi.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

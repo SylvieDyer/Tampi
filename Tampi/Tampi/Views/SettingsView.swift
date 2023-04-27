@@ -9,8 +9,10 @@ import SwiftUI
 
 struct SettingsView: View {
     @ObservedObject var tampi: Tampi
-    @State private var showChangeTampiOwner = false
+    // to dictate sheet opening
+    @State private var showUserInfo = false
     @State private var showChangePresets = false
+    @State private var showChangePresetNames = false
     
     var body: some View {
         List {
@@ -18,111 +20,74 @@ struct SettingsView: View {
                 Text("Welcome to the Settings Page, \(tampi.userInfo.userName)!").bold().font(.title2)
             }
             Section{
-                Button("Change Username") {
-                    showChangeTampiOwner.toggle();
-                    tampi.userInfo.resetEditPlaceholder()
+                // edit user settings
+                Button("User Settings") {
+                    showUserInfo.toggle()
                 }
-                .sheet(isPresented: $showChangeTampiOwner) {
-                    VStack{
-                        SheetView()
-                        Text("Change Username:")
-                        HStack{
-                            Spacer()
-                            TextField(
-                                "Enter New Username Here",
-                                text: $tampi.userInfo.editingUserName
-                            )
-                            .padding()
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .background(.indigo.opacity(0.2))
-                            .cornerRadius(10)
-                            
-                            Spacer()
-                        }
-                        Button("Save"){
-                            if (tampi.userInfo.editingUserName != ""){
-                                tampi.userInfo.userName = tampi.userInfo.editingUserName
-                            }
-                        }
-                        Spacer()
-                    }
+                .sheet(isPresented: $showUserInfo) {
+                    UserInfoSheet(tampi: tampi)
                 }
                 .fontWeight(.heavy)
                 .foregroundColor(.indigo)
                 .font(.title3)
                 
+                // edit presets
                 Button("Change Presets") {
                     showChangePresets.toggle()
                 }
                 .sheet(isPresented: $showChangePresets) {
+                    
                     VStack{
-                        SheetView()
-                        
                         Text("Change Presets")
                         Spacer()
                     }
                 }
                 
+                // edit preset names
                 Button("Change Preset Names") {
-                    showChangePresets.toggle()
+                    showChangePresetNames.toggle()
                 }
-                .sheet(isPresented: $showChangePresets) {
-                    VStack{
-                        SheetView()
-                        Text("Change Name for Preset1:")
-                        HStack{
-                            Spacer()
-                            TextField(
-                                "Enter New Preset1 Name",
-                                text: $tampi.appController.preset1
-                            )
-                            .padding()
-                            .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .background(.indigo.opacity(0.2))
-                            .cornerRadius(10)
+                .sheet(isPresented: $showChangePresetNames) {
+                   // title
+                    HStack(alignment: .center){
+                        Text("Change the names of your lamp presets!").font(.title2).bold()
+                    }.padding(20)
+                    // form to prevent blank values
+                    Form{
+                        // preset 1 name
+                        Section{
+                            Text("Change Preset1's Name: ").font(.title3).bold().foregroundColor(.gray)
                             
-                            Spacer()
+                            TextField(text: $tampi.appController.preset1, prompt: Text("Required")) {
+                                Text("Preset 1 Name?")
+                            }.bold()
                         }
-                        
-                        Spacer()
-                    }
+                        // preset2 name
+                        Section{
+                            Text("Change Preset2's Name: ").font(.title3).bold().foregroundColor(.gray)
+                            
+                            TextField(text: $tampi.appController.preset2, prompt: Text("Required")) {
+                                Text("Preset 2 Name?")
+                            }.bold()
+                        }
+                        // save button (to exit)
+                        Section(footer: Text("All fields must be filled to save!").font(.subheadline)){
+                            Button(action: {
+                                showChangePresetNames = false
+                            }){
+                                HStack(alignment: .center){
+                                    Text("Save Changes").font(.title2).font(.callout).bold().foregroundColor(.indigo.opacity(0.8))
+                                }
+                            }
+                        }.disabled(tampi.appController.preset1.isEmpty || tampi.appController.preset2.isEmpty)
+                    }.interactiveDismissDisabled(true)
                 }
             }
-                    
             .fontWeight(.heavy)
-            .foregroundColor(.indigo)
             .font(.title3)
+            .foregroundColor(.indigo)
                 
         }.scrollDisabled(true).padding(.bottom, 0)
-        
-        Spacer()
-    }
-}
-
-struct SheetView: View {
-    @Environment(\.dismiss) var dismiss
-
-    var body: some View {
-        HStack{
-            Spacer()
-            Button(action:{
-                dismiss()
-            })
-            {
-                HStack{
-                    Image(systemName: "chevron.down")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit).frame(width: 30, height: 20)
-                        .foregroundColor(.black)
-                }
-            
-                
-            }
-            
-            .font(.title)
-            .padding()
-           
-        }
         
         Spacer()
     }

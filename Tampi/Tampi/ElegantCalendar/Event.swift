@@ -17,9 +17,7 @@ struct Event {
     }
 }
 
-// TODO: NEED THIS ? each date should be identifiable by dateStrign (ONLY PREIOD FOR NOW)
 extension Event: Identifiable {
-
     var id: String {
         dateString
     }
@@ -28,19 +26,18 @@ extension Event: Identifiable {
 extension Event {
 
     // create the individual event with an input date
-    static func mock(withDate date:Date, withID dateString: String) -> Event {
+    static func createPeriodEvent(withDate date:Date, withID dateString: String) -> Event {
         Event(eventName: "Period",
-              tagColor: .randomColor,
+              tagColor: .darkRed,
               date: date,
               dateString: dateString)
     }
-
-//    // populate the calendar
-    static func mocks(start: Date, end: Date, tampi: Tampi) -> [Event] {
+    
+    // populate the calendar
+    static func addEvents(start: Date, end: Date, tampi: Tampi) -> [Event] {
         currentCalendar.markPeriods(
             start: start,
             end: end, tampi: tampi)
-         
     }
 }
 
@@ -54,40 +51,10 @@ private extension Calendar {
         formatter.dateFormat = "MM/dd/yyyy"
         
         for dateString in tampi.userInfo.cycleDates {
-            cycleEvents.append(.mock(withDate: formatter.date(from: dateString)!, withID: dateString))
+            cycleEvents.append(.createPeriodEvent(withDate: formatter.date(from: dateString)!, withID: dateString))
         }
         return cycleEvents
     }
-    
-//    func generateVisits(start: Date, end: Date) -> [Event] {
-//        var cycleEvents = [Event]()
-//        let formatter = DateFormatter()
-//        formatter.dateFormat = "YYYYMMDD"
-//
-//        enumerateDates(
-//            startingAfter: start,
-//            matching: .everyDay,
-//            matchingPolicy: .nextTime) { date, _, stop in
-//                if let date = date {
-//
-////                    print(date.formatted(.dateTime).dropLast(10))
-////                    print("Date Time \(date.formatted(.dateTime))")
-//                    // 2025-04-24 04:00:00 +0000 (for ex.)
-//                    if date < end {
-//                        for _ in 0..<Int.random(in: visitCountRange) {
-//                            cycleEvents.append(.mock(withDate: date))
-//                        }
-//                    } else {
-//                        stop = true
-//                    }
-//                }
-//            }
-//        return cycleEvents
-//    }
-//    
-//    func compareDates(dayOne: Date, dayTwo: Date) -> Bool {
-//        
-//    }
 }
 
 fileprivate let colorAssortment: [Color] = [.turquoise, .forestGreen, .darkPink, .darkRed, .lightBlue, .salmon, .military]

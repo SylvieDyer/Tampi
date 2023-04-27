@@ -5,25 +5,15 @@ import SwiftUI
 
 struct CalendarView: View {
     @ObservedObject private var calendarManager: MonthlyCalendarManager
-
+    @ObservedObject private var tampi: Tampi
+    @Binding var cycleDates: Set<String>
+ 
     let visitsByDay: [Date: [Event]]
-    @Binding var cycleDates: Set<String> {
-        didSet {
-            print("did set cycle dates")
-            let formatter = DateFormatter()
-            formatter.dateFormat = "MM/dd/yyyy"
-            for date in cycleDates{
-                calendarManager
-                calendarManager.datasource?.calendar(backgroundColorOpacityForDate: formatter.date(from: date)!)
-                print(date)
-            }
-        }
-    }
-
+    
     @State private var calendarTheme: CalendarTheme = .royalBlue
+   
 
-    init(ascVisits: [Event], initialMonth: Date?, withDates cycleDates: Binding<Set<String>>) {
-        print("CALENDAR VIEW INIT")
+    init(ascVisits: [Event], initialMonth: Date?, withTampi tampi: Tampi, withDates cycleDates: Binding<Set<String>>) {
         let configuration = CalendarConfiguration(
             calendar: currentCalendar,
             startDate: .daysFromToday(-365),
@@ -37,36 +27,41 @@ struct CalendarView: View {
             grouping: ascVisits,
             by: { currentCalendar.startOfDay(for: $0.date) })
 
+        self.tampi = tampi
         self._cycleDates = cycleDates
         calendarManager.datasource = self
         calendarManager.delegate = self
-
-
     }
 
     var body: some View {
-
         MonthlyCalendarView(calendarManager: calendarManager)
             .theme(calendarTheme)
-
     }
 }
 
 extension CalendarView: MonthlyCalendarDataSource {
 
     func calendar(backgroundColorOpacityForDate date: Date) -> Double {
-       // if the cycleDates includes this date
-        if cycleDates.contains(String(date.formatted(.dateTime).dropLast(10))) {
-            return 0.4
+        let formatter = DateFormatter()
+        formatter.dateFormat = "M/dd/yyyy"
+        
+        // if predictions holds this date
+        if (!tampi.userInfo.nextCycle.isEmpty && tampi.userInfo.nextCycle.contains(date)){
+            return 0.2
+        }
+        // if the cycleDates includes this date
+        else if cycleDates.contains(formatter.string(from: date)) {
+            return 0.6
         }
         else {
             return 0
         }
     }
 
+    // to disable days 
     func calendar(canSelectDate date: Date) -> Bool {
         let day = currentCalendar.dateComponents([.day], from: date).day!
-        return day != 4
+        return day != 0
     }
 
     func calendar(viewForSelectedDate date: Date, dimensions size: CGSize) -> AnyView {

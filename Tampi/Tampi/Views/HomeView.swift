@@ -16,22 +16,20 @@ struct HomeView: View{
             // home-header section
             Section {
                 Text("Welcome Back, \(tampi.userInfo.userName)!").bold().font(.title2)
-//                VStack{
-//                    Text("Currently tracking ")
-//                        .foregroundColor(.gray).fontWeight(.semibold) +
-//                    Text("**\(tampi.userInfo.userName)'s** ")
-//                        .foregroundColor(.purple.opacity(0.78)).fontWeight(.semibold)  +
-//                    Text("cycle")
-//                        .foregroundColor(.gray).fontWeight(.semibold)
-//                }
-//                .font(.title3)
             }
             
             // info on cycle
             Section{
                 HStack{
                     Spacer()
-                    Text("There are **\(tampi.userInfo.daysUntilNewCycle)** days until your next cycle begins").font(.title3).multilineTextAlignment(.center).fontWeight(.semibold).foregroundColor(.black.opacity(0.6))
+                    // when the user has put in cycle information
+                    if tampi.userInfo.daysUntilNewCycle != 666{
+                        Text("There are **\(tampi.userInfo.daysUntilNewCycle)** days until your next cycle begins").font(.title3).multilineTextAlignment(.center).fontWeight(.semibold).foregroundColor(.black.opacity(0.6))
+                    }
+                    // when no information has been put in
+                    else {
+                        Text("Use the tracker to see how many days until your next cycle begins!").font(.title3).multilineTextAlignment(.center).fontWeight(.semibold).foregroundColor(.black.opacity(0.6))
+                    }
                     Spacer()
                 }
             }.scrollDisabled(true).frame(height: 130)

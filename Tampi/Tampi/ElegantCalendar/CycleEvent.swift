@@ -14,7 +14,6 @@ struct CycleEvent: View {
                 locationName
                 visitDuration
             }
-
             Spacer()
         }
         .frame(height: VisitPreviewConstants.cellHeight)
