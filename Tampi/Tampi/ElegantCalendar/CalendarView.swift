@@ -3,11 +3,12 @@
 import ElegantCalendar
 import SwiftUI
 
-struct CalendarView: View {
+struct CalendarView1: View {
 
-    @ObservedObject private var tampi: Tampi;
+    @ObservedObject private var tampi: Tampi
     @ObservedObject private var calendarManager: MonthlyCalendarManager
 
+    
     let visitsByDay: [Date: [Event]]
 
     @State private var calendarTheme: CalendarTheme = .royalBlue
@@ -38,7 +39,7 @@ struct CalendarView: View {
     }
 }
 
-extension CalendarView: MonthlyCalendarDataSource {
+extension CalendarView1: MonthlyCalendarDataSource {
 
     func calendar(backgroundColorOpacityForDate date: Date) -> Double {
        // if the cycleDates includes this date
@@ -62,7 +63,7 @@ extension CalendarView: MonthlyCalendarDataSource {
     
 }
 
-extension CalendarView: MonthlyCalendarDelegate {
+extension CalendarView1: MonthlyCalendarDelegate {
 
     func calendar(didSelectDay date: Date) {
         print("Selected date: \(date)")
@@ -81,10 +82,10 @@ extension CalendarView: MonthlyCalendarDelegate {
     }
 }
 
-struct CalendarView_Previews: PreviewProvider {
-    static var tampi = Tampi(name: "LAMPI b827ebdb1217")
-    static var previews: some View {
-        CalendarView(ascVisits: Event.mocks(start: .daysFromToday(-365), end: .daysFromToday(365*2), tampi: tampi), initialMonth: nil, tampi: tampi)
-    }
-}
+//struct CalendarView_Previews: PreviewProvider {
+//    static var tampi = Tampi(name: "LAMPI b827ebdb1217")
+//    static var previews: some View {
+//        CalendarView(ascVisits: Event.mocks(start: .daysFromToday(-365), end: .daysFromToday(365*2), tampi: tampi), initialMonth: nil, tampi: tampi)
+//    }
+//}
 

@@ -40,6 +40,7 @@ extension Event {
         currentCalendar.markPeriods(
             start: start,
             end: end, tampi: tampi)
+         
     }
 }
 

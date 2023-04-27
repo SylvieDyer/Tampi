@@ -29,7 +29,12 @@ struct TampiView: View {
                     HomeView(tampi: tampi)
                 }
                 else if (tampi.appController.tracker){
-                    TrackerView(tampi: tampi)
+                    TrackerView(
+//                        ascVisits: Event.mocks(
+//                        start: .daysFromToday(-30*36),
+//                        end: .daysFromToday(30*36), tampi:tampi),
+//                                initialMonth: Date(),
+                                tampi: tampi)
                 }
                 else if (tampi.appController.education){
                     EduView(tampi: tampi)
