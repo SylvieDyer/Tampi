@@ -13,7 +13,9 @@ import ElegantCalendar
 struct TrackerView: View {
     
     @ObservedObject var tampi: Tampi
-   
+    @State private var isEditing = false
+    @State private var selectedDates: Set<DateComponents> = []
+    
     
 //    @ObservedObject private var calendarManager: MonthlyCalendarManager
 
@@ -38,7 +40,19 @@ struct TrackerView: View {
 //        calendarManager.datasource = self
 //        calendarManager.delegate = self
 //    }
-    
+    func updateCycle(){
+        let formatter = DateFormatter()
+        formatter.dateFormat = "M/dd/yyyy"
+        var dateString: String
+        print("updaing")
+        for date in tampi.userInfo.editCycleDates{
+            dateString = formatter.string(from: date.date!)
+            tampi.userInfo.cycleDates.insert(dateString)
+               
+            print(formatter.string(from: date.date!))
+        }
+        
+    }
   
     var body: some View {
         List{
@@ -53,33 +67,60 @@ struct TrackerView: View {
             }
             
             Section{
+                Button( action: {
+                    print("testing")
+                    for d in tampi.userInfo.cycleDates{
+                        print(d)
+                    }
+                }){
+                    Text("TESTING")
+                }
                 HStack{
-                    Button(action: {tampi.appController.editTracker.toggle() }){
+                    Button(action: {isEditing = true}){
                         HStack {
                             Spacer()
                             Image(systemName: "square.and.pencil").resizable().frame(width: 20, height: 23)
 //                            Text("Edit").font(.title3).frame(height: 20)
                         }.foregroundColor(.indigo).frame(height:10)
-                    }.sheet(isPresented: $tampi.appController.editTracker) {
+                        
+                        // pop up for the multidate selector
+                    }.sheet(isPresented: $isEditing ) {
+                       
                         VStack{
-                            CalendarPopUp(tampi: tampi)
+                            HStack{
+                                Spacer()
+                                Button(action:{
+                                    isEditing = false;
+                                    updateCycle()}) {
+                                        HStack{
+                                            Image(systemName: "chevron.down")
+                                                .resizable()
+                                                .aspectRatio(contentMode: .fit).frame(width: 30, height: 20)
+                                                .foregroundColor(.black)
+                                        }
+                                }.font(.title)
+                                .padding()
+                            }
+                            
+                            Text("Edit Cycle").font(.title).fontWeight(.bold)
+                            MultiDatePicker(
+                                "Start Date",
+                                selection: $tampi.userInfo.editCycleDates
+                            )
+                            .datePickerStyle(.graphical)
+                            .tint(.purple)
                         }
                     }
                 }
                 
                 HStack{
                     Spacer()
-                    
-//                    MonthlyCalendarView(calendarManager: calendarManager)
-//                        .theme(calendarTheme).frame(height: 600)
-                   
+
                     CalendarView(
                         ascVisits: Event.mocks(
                             start: .daysFromToday(-30*36),
                             end: .daysFromToday(30*36), tampi: tampi),
                         initialMonth: Date(), withDates: $tampi.userInfo.cycleDates).frame(height: 600)
-//
-                    
                     Spacer()
                 }.padding(10)
                 
@@ -89,28 +130,18 @@ struct TrackerView: View {
     
     
 }
+
+
 struct CalendarPopUp: View {
     @Environment(\.dismiss) var dismiss
     @ObservedObject var tampi: Tampi
     @State private var selectedDates: Set<DateComponents> = []
     
-    func updateCycle(){
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MM/dd/yyyy"
-        var dateString: String
-        
-        for date in tampi.userInfo.editCycleDates{
-            dateString = formatter.string(from: date.date!)
-            tampi.userInfo.cycleDates.insert(dateString)
-               
-            //print(formatter.string(from: date.date!))
-        }
-        
-    }
+ 
     var body: some View {
         HStack{
             Spacer()
-            Button(action:{ dismiss(); updateCycle()}) {
+            Button(action:{ dismiss();}) {
                 HStack{
                     Image(systemName: "chevron.down")
                         .resizable()
@@ -170,7 +201,6 @@ struct CalendarPopUp: View {
 struct CalendarView: View {
     @ObservedObject private var calendarManager: MonthlyCalendarManager
   
-    
     let visitsByDay: [Date: [Event]]
     @Binding var cycleDates: Set<String> {
         didSet {
@@ -188,6 +218,7 @@ struct CalendarView: View {
     @State private var calendarTheme: CalendarTheme = .royalBlue
 
     init(ascVisits: [Event], initialMonth: Date?, withDates cycleDates: Binding<Set<String>>) {
+        print("CALENDAR VIEW INIT")
         let configuration = CalendarConfiguration(
             calendar: currentCalendar,
             startDate: .daysFromToday(-365),
@@ -256,12 +287,6 @@ extension CalendarView: MonthlyCalendarDelegate {
 
     func calendar(willDisplayYear date: Date) {
         print("Year displayed: \(date)")
-    }
-}
-
-extension Binding {
-     func toUnwrapped<T>(defaultValue: T) -> Binding<T> where Value == Optional<T>  {
-        Binding<T>(get: { self.wrappedValue ?? defaultValue }, set: { self.wrappedValue = $0 })
     }
 }
 

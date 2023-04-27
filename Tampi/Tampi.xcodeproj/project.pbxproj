@@ -25,7 +25,6 @@
 		5AE5CA0F29F6F8CD00718779 /* VisitsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE5CA0E29F6F8CD00718779 /* VisitsListView.swift */; };
 		5AE5CA1129F6F8EC00718779 /* VisitPreviewConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE5CA1029F6F8EC00718779 /* VisitPreviewConstants.swift */; };
 		5AE5CA1329F6F93500718779 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE5CA1229F6F93500718779 /* AppDelegate.swift */; };
-		5AE5CA1529F6F94900718779 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE5CA1429F6F94900718779 /* SceneDelegate.swift */; };
 		5AE5CA1729F6FA4800718779 /* Date+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE5CA1629F6FA4800718779 /* Date+Additions.swift */; };
 		5AE5CA1929F6FB4E00718779 /* LightDarkThemePreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE5CA1829F6FB4E00718779 /* LightDarkThemePreview.swift */; };
 /* End PBXBuildFile section */
@@ -50,7 +49,6 @@
 		5AE5CA0E29F6F8CD00718779 /* VisitsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisitsListView.swift; sourceTree = "<group>"; };
 		5AE5CA1029F6F8EC00718779 /* VisitPreviewConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisitPreviewConstants.swift; sourceTree = "<group>"; };
 		5AE5CA1229F6F93500718779 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		5AE5CA1429F6F94900718779 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		5AE5CA1629F6FA4800718779 /* Date+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Additions.swift"; sourceTree = "<group>"; };
 		5AE5CA1829F6FB4E00718779 /* LightDarkThemePreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LightDarkThemePreview.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -127,7 +125,6 @@
 				5AE5CA0E29F6F8CD00718779 /* VisitsListView.swift */,
 				5AE5CA1029F6F8EC00718779 /* VisitPreviewConstants.swift */,
 				5AE5CA1229F6F93500718779 /* AppDelegate.swift */,
-				5AE5CA1429F6F94900718779 /* SceneDelegate.swift */,
 				5AE5CA0829F6F86600718779 /* CalendarView.swift */,
 				5AE5CA1629F6FA4800718779 /* Date+Additions.swift */,
 				5AE5CA1829F6FB4E00718779 /* LightDarkThemePreview.swift */,
@@ -217,7 +214,6 @@
 				5A4BDD7C29DCA73E00E0797B /* HomeView.swift in Sources */,
 				5AE5CA0D29F6F8B600718779 /* CycleEvent.swift in Sources */,
 				5AE5CA1329F6F93500718779 /* AppDelegate.swift in Sources */,
-				5AE5CA1529F6F94900718779 /* SceneDelegate.swift in Sources */,
 				5AE5CA0B29F6F8A700718779 /* Event.swift in Sources */,
 				5AE5CA1729F6FA4800718779 /* Date+Additions.swift in Sources */,
 				5A4BDD6929DB759500E0797B /* TampiApp.swift in Sources */,
