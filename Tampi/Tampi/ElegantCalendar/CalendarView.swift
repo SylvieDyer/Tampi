@@ -24,7 +24,7 @@ struct CalendarView: View {
 
         visitsByDay = Dictionary(
             grouping: ascVisits,
-            by: { currentCalendar.startOfDay(for: $0.arrivalDate) })
+            by: { currentCalendar.startOfDay(for: $0.date) })
         self.tampi = Tampi(name: "LAMPI b827ebdb1217")
         calendarManager.datasource = self
         calendarManager.delegate = self

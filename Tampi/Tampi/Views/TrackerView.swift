@@ -25,29 +25,31 @@ struct TrackerView: View {
                 }
             }
             
-            CalendarView(
-                ascVisits: Event.mocks(
-                    start: .daysFromToday(-30*36),
-                    end: .daysFromToday(30*36), tampi:tampi),
-                initialMonth: Date(), tampi: tampi).frame(height: 600)
-
-                VStack{
-                 Spacer()
-                    HStack{
-                        Button(action: {tampi.appController.editTracker.toggle() }){
-                            HStack {
-                                Image(systemName: "square.and.pencil")
-                                Text("Edit").font(.title3)
-                            }.foregroundColor(.indigo).frame(height:20)
-                        }.sheet(isPresented: $tampi.appController.editTracker) {
-                            VStack{
-                                SheetView(tampi: tampi)
-                            }
+            Section{
+                HStack{
+                    Button(action: {tampi.appController.editTracker.toggle() }){
+                        HStack {
+                            Spacer()
+                            Image(systemName: "square.and.pencil").resizable().frame(width: 20, height: 23)
+//                            Text("Edit").font(.title3).frame(height: 20)
+                        }.foregroundColor(.indigo).frame(height:10)
+                    }.sheet(isPresented: $tampi.appController.editTracker) {
+                        VStack{
+                            SheetView(tampi: tampi)
                         }
-                    }.padding(10)
-                  
+                    }
+                }
                 
-                //TODO: the date select- edit on multidate picker, then it gets sent here?
+                HStack{
+                    Spacer()
+                    CalendarView(
+                        ascVisits: Event.mocks(
+                            start: .daysFromToday(-30*36),
+                            end: .daysFromToday(30*36), tampi:tampi),
+                        initialMonth: Date(), tampi: tampi).frame(height: 600)
+                    Spacer()
+                }.padding(10)
+                
             }
         }
     }

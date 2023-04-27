@@ -9,8 +9,7 @@ struct Event {
 
     let eventName: String
     let tagColor: Color
-    let arrivalDate: Date
-    let departureDate: Date
+    let date: Date
     let dateString: String
 
     var notes: String {
@@ -18,7 +17,7 @@ struct Event {
     }
 }
 
-// TODO: NEED THIS ? each date should be identifiable by datStrign (ONLY PREIOD FOR NOW)
+// TODO: NEED THIS ? each date should be identifiable by dateStrign (ONLY PREIOD FOR NOW)
 extension Event: Identifiable {
 
     var id: String {
@@ -29,11 +28,10 @@ extension Event: Identifiable {
 extension Event {
 
     // create the individual event with an input date
-    static func mock(withDate date: Date, withDateString dateString: String) -> Event {
+    static func mock(withDate date:Date, withID dateString: String) -> Event {
         Event(eventName: "Period",
               tagColor: .randomColor,
-              arrivalDate: date,
-              departureDate: date.addingTimeInterval(60*60),
+              date: date,
               dateString: dateString)
     }
 
@@ -52,10 +50,10 @@ private extension Calendar {
     func markPeriods(start: Date, end:Date, tampi:Tampi)-> [Event]{
         var cycleEvents = [Event]()
         let formatter = DateFormatter()
+        formatter.dateFormat = "MM/dd/yyyy"
         
-        formatter.dateFormat = "MM/DD/YYYY"
         for dateString in tampi.userInfo.cycleDates {
-            cycleEvents.append(.mock(withDate: formatter.date(from: dateString)!,withDateString: dateString))
+            cycleEvents.append(.mock(withDate: formatter.date(from: dateString)!, withID: dateString))
         }
         return cycleEvents
     }
