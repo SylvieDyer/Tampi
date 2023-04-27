@@ -136,8 +136,16 @@ extension Tampi {
         //var cycleInfo: [Int: Bool] = [:]
         
         var dayOne = Date()
-        var editCycleDates: Set<DateComponents> = []
-        var cycleDates: Set<String> = ["4/16/2023", "4/14/2023", "4/15/2023", "4/17/2023"]
+        var editCycleDates: Set<DateComponents> = [
+            // testing dates (correspond to the dates below)
+//            DateComponents(year: 2023, month: 4, day: 14),
+//            DateComponents(year: 2023, month: 4, day: 15),
+//            DateComponents(year: 2023, month: 4, day: 16),
+//            DateComponents(year: 2023, month: 4, day: 17),
+        ]
+        var cycleDates: Set<String> = [
+            //"4/14/2023", "4/15/2023", "4/16/2023", "4/17/2023"
+        ]
         
 //        var setDates: Set<DateComponents>{
 //            //return dates

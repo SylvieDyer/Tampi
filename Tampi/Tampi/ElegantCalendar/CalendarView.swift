@@ -3,17 +3,27 @@
 import ElegantCalendar
 import SwiftUI
 
-struct CalendarView1: View {
-
-    @ObservedObject private var tampi: Tampi
+struct CalendarView: View {
     @ObservedObject private var calendarManager: MonthlyCalendarManager
 
-    
     let visitsByDay: [Date: [Event]]
+    @Binding var cycleDates: Set<String> {
+        didSet {
+            print("did set cycle dates")
+            let formatter = DateFormatter()
+            formatter.dateFormat = "MM/dd/yyyy"
+            for date in cycleDates{
+                calendarManager
+                calendarManager.datasource?.calendar(backgroundColorOpacityForDate: formatter.date(from: date)!)
+                print(date)
+            }
+        }
+    }
 
     @State private var calendarTheme: CalendarTheme = .royalBlue
 
-    init(ascVisits: [Event], initialMonth: Date?, tampi: Tampi) {
+    init(ascVisits: [Event], initialMonth: Date?, withDates cycleDates: Binding<Set<String>>) {
+        print("CALENDAR VIEW INIT")
         let configuration = CalendarConfiguration(
             calendar: currentCalendar,
             startDate: .daysFromToday(-365),
@@ -26,24 +36,27 @@ struct CalendarView1: View {
         visitsByDay = Dictionary(
             grouping: ascVisits,
             by: { currentCalendar.startOfDay(for: $0.date) })
-        self.tampi = Tampi(name: "LAMPI b827ebdb1217")
+
+        self._cycleDates = cycleDates
         calendarManager.datasource = self
         calendarManager.delegate = self
+
+
     }
 
     var body: some View {
-       
-            MonthlyCalendarView(calendarManager: calendarManager)
-                .theme(calendarTheme)
-       
+
+        MonthlyCalendarView(calendarManager: calendarManager)
+            .theme(calendarTheme)
+
     }
 }
 
-extension CalendarView1: MonthlyCalendarDataSource {
+extension CalendarView: MonthlyCalendarDataSource {
 
     func calendar(backgroundColorOpacityForDate date: Date) -> Double {
        // if the cycleDates includes this date
-        if tampi.userInfo.cycleDates.contains(String(date.formatted(.dateTime).dropLast(10))) {
+        if cycleDates.contains(String(date.formatted(.dateTime).dropLast(10))) {
             return 0.4
         }
         else {
@@ -60,10 +73,10 @@ extension CalendarView1: MonthlyCalendarDataSource {
         let startOfDay = currentCalendar.startOfDay(for: date)
         return VisitsListView(cycleEvents: visitsByDay[startOfDay] ?? [], height: size.height).erased
     }
-    
+
 }
 
-extension CalendarView1: MonthlyCalendarDelegate {
+extension CalendarView: MonthlyCalendarDelegate {
 
     func calendar(didSelectDay date: Date) {
         print("Selected date: \(date)")

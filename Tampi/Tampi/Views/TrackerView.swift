@@ -4,7 +4,6 @@
 //
 //  Created by Sylvie Dyer on 4/4/23.
 //
-
 import SwiftUI
 import UIKit
 import UniformTypeIdentifiers
@@ -16,46 +15,29 @@ struct TrackerView: View {
     @State private var isEditing = false
     @State private var selectedDates: Set<DateComponents> = []
     
-    
-//    @ObservedObject private var calendarManager: MonthlyCalendarManager
-
-//    let visitsByDay: [Date: [Event]]
-//
-//    @State private var calendarTheme: CalendarTheme = .royalBlue
-
-//    init(ascVisits: [Event], initialMonth: Date?, tampi: Tampi) {
-//        let configuration = CalendarConfiguration(
-//            calendar: currentCalendar,
-//            startDate: .daysFromToday(-365),
-//            endDate: .daysFromToday(365*2))
-//
-//        calendarManager = MonthlyCalendarManager(
-//            configuration: configuration,
-//            initialMonth: initialMonth)
-//
-//        visitsByDay = Dictionary(
-//            grouping: ascVisits,
-//            by: { currentCalendar.startOfDay(for: $0.date) })
-//        self.tampi = Tampi(name: "LAMPI b827ebdb1217")
-//        calendarManager.datasource = self
-//        calendarManager.delegate = self
-//    }
-    func updateCycle(){
+    // updates the calendar display
+    func updateCycle() {
+        // formatter to put into a string
         let formatter = DateFormatter()
         formatter.dateFormat = "M/dd/yyyy"
-        var dateString: String
-        print("updaing")
-        for date in tampi.userInfo.editCycleDates{
-            dateString = formatter.string(from: date.date!)
-            tampi.userInfo.cycleDates.insert(dateString)
-               
-            print(formatter.string(from: date.date!))
+        
+        // remove the dates that have been unselected
+        for date in tampi.userInfo.editCycleDates.subtracting(selectedDates) {
+            tampi.userInfo.cycleDates.remove(formatter.string(from: date.date!))
         }
         
+        // add the new dates that have been selected
+        for date in selectedDates.subtracting(tampi.userInfo.editCycleDates){
+            tampi.userInfo.cycleDates.insert(formatter.string(from: date.date!))
+        }
+        
+        // ensure the changes are saved when the datepicker is opened again
+        tampi.userInfo.editCycleDates = selectedDates
     }
   
     var body: some View {
         List{
+            // header section
             Section{
                 Text("Welcome to the Tracker Page!").bold().font(.title2)
                 VStack(alignment: .leading){
@@ -66,56 +48,52 @@ struct TrackerView: View {
                 }
             }
             
+            // calendar and edit
             Section{
-                Button( action: {
-                    print("testing")
-                    for d in tampi.userInfo.cycleDates{
-                        print(d)
-                    }
-                }){
-                    Text("TESTING")
-                }
                 HStack{
-                    Button(action: {isEditing = true}){
+                    Button(action: {
+                        // open the sheet
+                        isEditing = true
+                        // set the temp var selected dates to be the previously selected dates
+                        selectedDates = tampi.userInfo.editCycleDates
+                    }){
                         HStack {
                             Spacer()
                             Image(systemName: "square.and.pencil").resizable().frame(width: 20, height: 23)
-//                            Text("Edit").font(.title3).frame(height: 20)
+//                      Text("Edit").font(.title3).frame(height: 20)
                         }.foregroundColor(.indigo).frame(height:10)
                         
-                        // pop up for the multidate selector
-                    }.sheet(isPresented: $isEditing ) {
-                       
+                    // pop up for the multidate selector
+                    }.sheet(isPresented: $isEditing, onDismiss: updateCycle) {
+                        
                         VStack{
+                            // close button
                             HStack{
                                 Spacer()
                                 Button(action:{
                                     isEditing = false;
-                                    updateCycle()}) {
-                                        HStack{
-                                            Image(systemName: "chevron.down")
-                                                .resizable()
-                                                .aspectRatio(contentMode: .fit).frame(width: 30, height: 20)
-                                                .foregroundColor(.black)
-                                        }
+                                }) {
+                                    HStack{
+                                        Image(systemName: "chevron.down")
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fit).frame(width: 30, height: 20)
+                                            .foregroundColor(.black)
+                                    }
                                 }.font(.title)
-                                .padding()
+                                    .padding()
                             }
-                            
+                            // calendar to edit the cycle
                             Text("Edit Cycle").font(.title).fontWeight(.bold)
-                            MultiDatePicker(
-                                "Start Date",
-                                selection: $tampi.userInfo.editCycleDates
-                            )
-                            .datePickerStyle(.graphical)
-                            .tint(.purple)
+                            MultiDatePicker("Start Date", selection: $selectedDates)
+                                .datePickerStyle(.graphical)
+                                .tint(.purple)
                         }
                     }
                 }
                 
                 HStack{
                     Spacer()
-
+                    
                     CalendarView(
                         ascVisits: Event.mocks(
                             start: .daysFromToday(-30*36),
@@ -126,167 +104,6 @@ struct TrackerView: View {
                 
             }
         }
-    }
-    
-    
-}
-
-
-struct CalendarPopUp: View {
-    @Environment(\.dismiss) var dismiss
-    @ObservedObject var tampi: Tampi
-    @State private var selectedDates: Set<DateComponents> = []
-    
- 
-    var body: some View {
-        HStack{
-            Spacer()
-            Button(action:{ dismiss();}) {
-                HStack{
-                    Image(systemName: "chevron.down")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit).frame(width: 30, height: 20)
-                        .foregroundColor(.black)
-                }
-            }.font(.title)
-            .padding()
-        }
-        Text("Edit Cycle").font(.title).fontWeight(.bold)
-        MultiDatePicker(
-            "Start Date",
-            selection: $tampi.userInfo.editCycleDates
-        )
-        .datePickerStyle(.graphical)
-        .tint(.purple)
-
-        Spacer()
-    }
-}
-
-//extension TrackerView: MonthlyCalendarDelegate {
-//
-//    func calendar(didSelectDay date: Date) {
-//        print("Selected date: \(date)")
-//    }
-//
-//    func calendar(willDisplayMonth date: Date) {
-//        print("Month displayed: \(date)")
-//    }
-//
-//    func calendar(didSelectMonth date: Date) {
-//        print("Selected month: \(date)")
-//    }
-//
-//    func calendar(willDisplayYear date: Date) {
-//        print("Year displayed: \(date)")
-//    }
-//}
-//
-//
-//extension TrackerView: MonthlyCalendarDataSource {
-//
-//    func calendar(backgroundColorOpacityForDate date: Date) -> Double {
-//       // if the cycleDates includes this date
-//        if tampi.userInfo.cycleDates.contains(String(date.formatted(.dateTime).dropLast(10))) {
-//            return 0.4
-//        }
-//        else {
-//            return 0
-//        }
-//    }
-//
-//
-//}
-
-struct CalendarView: View {
-    @ObservedObject private var calendarManager: MonthlyCalendarManager
-  
-    let visitsByDay: [Date: [Event]]
-    @Binding var cycleDates: Set<String> {
-        didSet {
-            print("did set cycle dates")
-            let formatter = DateFormatter()
-            formatter.dateFormat = "MM/dd/yyyy"
-            for date in cycleDates{
-                calendarManager
-                calendarManager.datasource?.calendar(backgroundColorOpacityForDate: formatter.date(from: date)!)
-                print(date)
-            }
-        }
-    }
-
-    @State private var calendarTheme: CalendarTheme = .royalBlue
-
-    init(ascVisits: [Event], initialMonth: Date?, withDates cycleDates: Binding<Set<String>>) {
-        print("CALENDAR VIEW INIT")
-        let configuration = CalendarConfiguration(
-            calendar: currentCalendar,
-            startDate: .daysFromToday(-365),
-            endDate: .daysFromToday(365*2))
-
-        calendarManager = MonthlyCalendarManager(
-            configuration: configuration,
-            initialMonth: initialMonth)
-
-        visitsByDay = Dictionary(
-            grouping: ascVisits,
-            by: { currentCalendar.startOfDay(for: $0.date) })
-        
-        self._cycleDates = cycleDates
-        calendarManager.datasource = self
-        calendarManager.delegate = self
-        
-
-    }
-
-    var body: some View {
-        
-        MonthlyCalendarView(calendarManager: calendarManager)
-            .theme(calendarTheme)
-        
-    }
-}
-
-extension CalendarView: MonthlyCalendarDataSource {
-
-    func calendar(backgroundColorOpacityForDate date: Date) -> Double {
-       // if the cycleDates includes this date
-        if cycleDates.contains(String(date.formatted(.dateTime).dropLast(10))) {
-            return 0.4
-        }
-        else {
-            return 0
-        }
-    }
-
-    func calendar(canSelectDate date: Date) -> Bool {
-        let day = currentCalendar.dateComponents([.day], from: date).day!
-        return day != 4
-    }
-
-    func calendar(viewForSelectedDate date: Date, dimensions size: CGSize) -> AnyView {
-        let startOfDay = currentCalendar.startOfDay(for: date)
-        return VisitsListView(cycleEvents: visitsByDay[startOfDay] ?? [], height: size.height).erased
-    }
-    
-}
-
-extension CalendarView: MonthlyCalendarDelegate {
-
-    func calendar(didSelectDay date: Date) {
-        print("Selected date: \(date)")
-    }
-
-    func calendar(willDisplayMonth date: Date) {
-        print("Month displayed: \(date)")
-    }
-
-    func calendar(didSelectMonth date: Date) {
-        print("Selected month: \(date)")
-    }
-
-    func calendar(willDisplayYear date: Date) {
-        print("Year displayed: \(date)")
     }
 }
 
