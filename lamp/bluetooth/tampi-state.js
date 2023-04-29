@@ -11,13 +11,12 @@ function TampiState() {
     this.brightness = 0xFF;
     this.hue = 0xFF;
     this.saturation = 0xFF;
-    this.value = 0xFF;
     this.clientId = 'lamp_bt_peripheral';
     this.has_received_first_update = false;
 
     var that = this;
     var client_connection_topic = 'lamp/connection/' + this.clientId + '/state';
-    
+
     var mqtt_options = {
     clientId: this.clientId,
     'will' : {
@@ -53,9 +52,9 @@ function TampiState() {
         var new_brightness = Math.round(new_state['brightness']*0xFF);
         var new_hue = Math.round(new_state['color']['h']*0xFF);
         var new_saturation = Math.round(new_state['color']['s']*0xFF);
-        
+
         if (that.new_mode !== new_mode) {
-            console.log('MQTT - NEW MODE');
+            console.log('MQTT - NEW MODE: ' + new_mode);
             that.mode = new_mode;
             that.emit('changed-mode', that.mode);
         }
@@ -69,32 +68,26 @@ function TampiState() {
             that.is_on = new_state['on'];
             that.emit('changed-onoff', that.is_on);
         }
-        if (that.brightness !== new_brightness ) { 
+        if (that.brightness !== new_brightness ) {
             console.log('MQTT - NEW BRIGHTNESS %d', new_brightness);
             that.brightness = new_brightness;
             that.emit('changed-brightness', that.brightness);
         }
-        if ( (that.hue !== new_hue ) || (that.saturation !== new_saturation) ) { 
-            console.log('MQTT - NEW HSV %d %d', new_hue, new_saturation);
+        if ( (that.hue !== new_hue ) || (that.saturation !== new_saturation) ) {
+            console.log('MQTT - NEW HSM %d %d', new_hue, new_saturation);
             that.hue = new_hue;
             that.saturation = new_saturation;
-            that.emit('changed-hsv', that.hue, that.saturation, that.value);
+	        that.mode = new_mode
+            that.emit('changed-hsm', that.hue, that.saturation, that.mode);
         }
         that.has_received_first_update = true;
     });
 
     this.mqtt_client = mqtt_client;
-    
+
 }
 
 util.inherits(TampiState, events.EventEmitter);
-
-// TampiState.prototype.set_mode = function(mode) {
-//     this.mode = mode;
-//     var tmp = {'client': this.clientId, 'mode': this.mode};
-//     this.mqtt_client.publish('lamp/set_config', JSON.stringify(tmp));
-//     console.log('mode = ', this.mode, ' msg: ', JSON.stringify(tmp));
-// };
 
 TampiState.prototype.set_days = function(days) {
     this.days = days;
@@ -120,7 +113,6 @@ TampiState.prototype.set_brightness = function(brightness) {
 TampiState.prototype.set_hsm = function(hue, saturation, mode) {
     this.hue = hue;
     this.saturation = saturation;
-    // this.value = value;
     this.mode = mode;
     var tmp = {'client': this.clientId,
                'mode' : this.mode,

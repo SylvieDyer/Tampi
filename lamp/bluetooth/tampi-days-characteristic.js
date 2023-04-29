@@ -1,7 +1,7 @@
 var util = require('util');
 var bleno = require('bleno');
 
-var CHARACTERISTIC_NAME = 'mode';
+var CHARACTERISTIC_NAME = 'days';
 
 function TampiDaysCharacteristic(tampiState) {
   TampiDaysCharacteristic.super_.call(this, {
