@@ -37,8 +37,8 @@ class Tampi: NSObject, ObservableObject {
         }
     }
     
-    // to track the mode the lampi is on (Cycle Tracking, Preset)
-    private var lampiModeCharacteristic: CBCharacteristic?
+    // to track the Mode the lampi is on (Cycle Tracking, Preset) and related HS
+    private var HSMCharacteristic: CBCharacteristic?
     // to track the power state of the lampi (TODO: IDK IF WE WANT THIS)
     private var powerStateCharacteristic: CBCharacteristic?
     // to track the number of days to next cycle
@@ -74,8 +74,9 @@ extension Tampi {
     //       Implement HSV characteristic (to change cylce color)?
     //       Add brightness (maybe no)
     static let SERVICE_UUID = CBUUID(string: "0001A7D3-D8A4-4FEA-8174-1736E808C066")
+    static let HSM_UUID = CBUUID(string: "0002A7D3-D8A4-4FEA-8174-1736E808C066")
     static let POWERSTATE_UUID = CBUUID(string: "0004A7D3-D8A4-4FEA-8174-1736E808C066")
-    static let MODE_UUID = CBUUID(string: "0005A7D3-D8A4-4FEA-8174-1736E808C066")
+    static let DAYS_UUID = CBUUID(string: "0006A7D3-D8A4-4FEA-8174-1736E808C066")
     
     private var shouldSkipUpdateDevice: Bool {
         return skipNextDeviceUpdate || pendingBluetoothUpdate
@@ -85,9 +86,11 @@ extension Tampi {
         if lampiState.isConnected && (force || !shouldSkipUpdateDevice) {
             pendingBluetoothUpdate = true
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+                
                 self?.writePowerState()
-                self?.writeLampiMode()
-
+                self?.writeHSM()
+                self?.writeDays()
+                
                 self?.pendingBluetoothUpdate = false
             }
         }
@@ -102,10 +105,41 @@ extension Tampi {
         }
     }
     
-    private func writeLampiMode() {
-        if let lampiModeCharacteristic = lampiModeCharacteristic {
-            let data = Data(bytes: &lampiState.mode, count: 1)
-            lampiPeripheral?.writeValue(data, for: lampiModeCharacteristic, type: .withResponse)
+    private func writeDays() {
+        if let remaningDaysCharacteristic = remaningDaysCharacteristic {
+            var days = 15 // TODO: Tie this to some state variable (i.e. lampiState.days) ?
+            let data = Data(bytes: &days, count: 1)
+            lampiPeripheral?.writeValue(data, for: remaningDaysCharacteristic, type:.withResponse)
+        }
+    }
+        
+    private func writeHSM() {
+        if let HSMCharacteristic = HSMCharacteristic {
+            var hsm: UInt32 = 0
+            let mode = UInt32(lampiState.mode)
+            var hueInt = UInt32(0.0)
+            var satInt = UInt32(1.0)
+            
+            // TODO: Tie the custom presets to custom ones?
+            if mode == 0 {
+                hueInt = UInt32(0.0 * 255.0)
+                satInt = UInt32(1.0 * 255.0)
+            }
+            else if mode == 1 {
+                hueInt = UInt32(0.141 * 255.0)
+                satInt = UInt32(0.92 * 255.0)
+            }
+            else {
+                hueInt = UInt32(0.411 * 255.0)
+                satInt = UInt32(1.00 * 255.0)
+            }
+            
+            hsm = hueInt
+            hsm += satInt << 8
+            hsm += mode << 16
+            
+            let data = Data(bytes: &hsm, count: 3)
+            lampiPeripheral?.writeValue(data, for: HSMCharacteristic, type: .withResponse)
         }
     }
     
@@ -119,6 +153,9 @@ extension Tampi {
         var isConnected = false
         var isOn = false
         var mode: Int = 0
+        var hue: Double = 0.0
+        var sat: Double = 0.0
+        var days: Int = 10
     }
     
     struct UserInfo: Equatable {
@@ -230,7 +267,6 @@ extension Tampi: CBCentralManagerDelegate {
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         print("SCANNING>>")
         if central.state == .poweredOn {
-            print("POWERED ON??")
             let services = [CBUUID(string:Tampi.OUR_SERVICE_UUID)]
             bluetoothManager?.scanForPeripherals(withServices: services)
         }
@@ -272,13 +308,16 @@ extension Tampi: CBPeripheralDelegate {
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         guard let characteristics = service.characteristics else { return }
-        print("START")
-        print(characteristics)
+
         for characteristic in characteristics {
             switch characteristic.uuid {
-            case Tampi.MODE_UUID:
-                print("FOUND MODE")
-                self.lampiModeCharacteristic = characteristic
+            case Tampi.DAYS_UUID:
+                self.remaningDaysCharacteristic = characteristic
+                peripheral.readValue(for: characteristic)
+                peripheral.setNotifyValue(true, for: characteristic)
+                
+            case Tampi.HSM_UUID:
+                self.HSMCharacteristic = characteristic
                 peripheral.readValue(for: characteristic)
                 peripheral.setNotifyValue(true, for: characteristic)
 
@@ -293,7 +332,7 @@ extension Tampi: CBPeripheralDelegate {
         }
 
         // not connected until all characteristics are discovered
-        if self.lampiModeCharacteristic != nil && self.powerStateCharacteristic != nil {
+        if self.HSMCharacteristic != nil && self.remaningDaysCharacteristic != nil && self.powerStateCharacteristic != nil {
             skipNextDeviceUpdate = true
             lampiState.isConnected = true
         }
@@ -306,8 +345,8 @@ extension Tampi: CBPeripheralDelegate {
               !updatedValue.isEmpty else { return }
 
         switch characteristic.uuid {
-        case Tampi.MODE_UUID:
-            lampiState.mode = parseMode(for: updatedValue)
+        case Tampi.HSM_UUID:
+            lampiState.mode = parseHSM(for: updatedValue)
 
         case Tampi.POWERSTATE_UUID:
             lampiState.isOn = parsePowerState(for: updatedValue)
@@ -318,12 +357,14 @@ extension Tampi: CBPeripheralDelegate {
     }
 
     private func parsePowerState(for value: Data) -> Bool {
-        print("CALLED PARSEPOWER")
         return value.first == 1
     }
 
+    private func parseHSM(for value: Data) -> Int {
+        return Int(value[2])
+    }
+    
     private func parseMode(for value: Data) -> Int {
-        print("CALLED PARSEMODE")
         return Int(value[0])
     }
 }
