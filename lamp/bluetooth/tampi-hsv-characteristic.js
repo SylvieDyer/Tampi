@@ -22,10 +22,10 @@ function TampiHSVCharacteristic(tampiState) {
 
   this._update = null;
 
-  this.changed_hsv =  function(h, s, v) {
+  this.changed_hsv =  function(h, s, m) {
     console.log('tampiState changed TampiHSVCharacteristic');
     if( this._update !== null ) {
-        var data = new Buffer([h, s, v]);
+        var data = new Buffer([h, s, m]);
         this._update(data);
     } 
   }
@@ -48,7 +48,7 @@ TampiHSVCharacteristic.prototype.onReadRequest = function(offset, callback) {
     var data = new Buffer(3);
     data.writeUInt8(Math.round(this.tampiState.hue), 0);
     data.writeUInt8(Math.round(this.tampiState.saturation), 1);
-    data.writeUInt8(Math.round(this.tampiState.value), 2);
+    data.writeUInt8(Math.round(this.tampiState.mode), 2);
     console.log('onReadRequest returning ', data);
     callback(this.RESULT_SUCCESS, data);
   }
@@ -65,8 +65,8 @@ TampiHSVCharacteristic.prototype.onWriteRequest = function(data, offset, without
     else {
         var hue = data.readUInt8(0);
         var saturation = data.readUInt8(1);
-        var value = data.readUInt8(2);
-        this.tampiState.set_hsv( hue, saturation, value );
+        var mode = data.readUInt8(2);
+        this.tampiState.set_hsm( hue, saturation, mode );
         callback(this.RESULT_SUCCESS);
     }
 };
