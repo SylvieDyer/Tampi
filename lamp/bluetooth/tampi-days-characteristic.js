@@ -22,19 +22,19 @@ function TampiDaysCharacteristic(tampiState) {
 
   this._update = null;
 
-  this.changed_mode =  function(mode) {
+  this.changed_days =  function(days) {
     console.log('tampiState changed TampiDaysCharacteristic');
     if( this._update !== null ) {
         console.log('updating new mode uuid=', this.uuid);
         var data = new Buffer(1);
-        data.writeUInt8(Math.round(mode));
+        data.writeUInt8(Math.round(days));
         this._update(data);
     }
     }
 
   this.tampiState = tampiState;
 
-  this.tampiState.on('update-days', this.changed_mode.bind(this));
+  this.tampiState.on('update-days', this.changed_days.bind(this));
 
 }
 
@@ -48,7 +48,7 @@ TampiDaysCharacteristic.prototype.onReadRequest = function(offset, callback) {
   }
   else {
     var data = new Buffer(1);
-    data.writeUInt8(Math.round(this.tampiState.mode));
+    data.writeUInt8(Math.round(this.tampiState.days));
     console.log('onReadRequest returning ', data);
     callback(this.RESULT_SUCCESS, data);
   }
@@ -62,8 +62,8 @@ TampiDaysCharacteristic.prototype.onWriteRequest = function(data, offset, withou
         callback(this.RESULT_INVALID_ATTRIBUTE_LENGTH);
     }
     else {
-        var mode = data.readUInt8(0);
-        this.tampiState.set_mode( mode );
+        var days = data.readUInt8(0);
+        this.tampiState.set_days( days );
         callback(this.RESULT_SUCCESS);
     }
 };

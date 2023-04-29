@@ -70,7 +70,7 @@ class TampiService(object):
             self.db['preset1'] = {'h': round(0.141, FP_DIGITS), 's': round(0.92, FP_DIGITS)}
         if 'preset2' not in self.db:
             self.db['preset2'] = {'h': round(0.411, FP_DIGITS), 's': round(1.00, FP_DIGITS)}
-        
+
         self.write_current_settings_to_hardware()
 
     def _create_and_configure_broker_client(self):
@@ -142,12 +142,21 @@ class TampiService(object):
 
     def get_current_cycle(self):
         return self.db['cycle']
-    
+
+    def set_current_cycle(self, new_cycle):
+        self.db['cycle'] = new_cycle
+
     def get_current_preset1(self):
         return self.db['preset1']
-    
+
+    def set_current_preset1(self, new_preset1):
+        self.db['preset1'] = new_preset1
+
     def get_current_preset2(self):
         return self.db['preset2']
+
+    def set_current_preset2(self, new_preset2):
+        self.db['preset2'] = new_preset2
 
     def get_current_mode(self):
         return self.db['mode']
@@ -196,7 +205,7 @@ class TampiService(object):
 
     def get_current_days(self):
         return self.db['days']
-    
+
     def set_current_days(self, new_days):
         self.db['days'] = new_days
 

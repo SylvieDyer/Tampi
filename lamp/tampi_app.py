@@ -66,7 +66,7 @@ class TampiApp(App):
         return self._remainingDays
 
     def _set_remainingDays(self, value):
-        self._remainingDays = 20
+        self._remainingDays = value
 
     remainingDays = AliasProperty(_get_remainingDays, _set_remainingDays, bind=['_remainingDays'])
     cycle = AliasProperty(_get_cycle, _set_cycle, bind=['_cycle'])
@@ -167,6 +167,9 @@ class TampiApp(App):
 
             if 'on' in new_state:
                 self.lamp_is_on = new_state['on']
+
+            if 'days' in new_state:
+                self.remainingDays = new_state['days']
         finally:
             self._updatingUI = False
 
@@ -178,6 +181,7 @@ class TampiApp(App):
         print("update lamp mode: ")
         print(self._brightness)
         msg = {'mode': self.curr_mode,
+               'days': self.remainingDays,
                'brightness': self._brightness,
                'on': self.lamp_is_on,
                'client': MQTT_CLIENT_ID}
