@@ -5,6 +5,7 @@ var TampiOnOffCharacteristic = require('./tampi-onoff-characteristic');
 var TampiBrightnessCharacteristic = require('./tampi-brightness-characteristic');
 var TampiHSVCharacteristic = require('./tampi-hsv-characteristic');
 var TampiModeCharacteristic = require('./tampi-mode-characteristic');
+var TampiDaysCharacteristic = require('./tampi-days-characteristic')
 
 function TampiService(lampiState) {
     bleno.PrimaryService.call(this, {
@@ -14,6 +15,7 @@ function TampiService(lampiState) {
             new TampiBrightnessCharacteristic(lampiState),
             new TampiOnOffCharacteristic(lampiState),
             new TampiModeCharacteristic(lampiState),
+            new TampiDaysCharacteristic(lampiState)
         ]
     });
 }

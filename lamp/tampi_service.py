@@ -62,6 +62,15 @@ class TampiService(object):
             self.db['on'] = True
         if 'client' not in self.db:
             self.db['client'] = ''
+        if 'days' not in self.db:
+            self.db['days'] = 0
+        if 'cycle' not in self.db:
+            self.db['cycle'] = {'h': round(0.00, FP_DIGITS), 's': round(1.00, FP_DIGITS)}
+        if 'preset1' not in self.db:
+            self.db['preset1'] = {'h': round(0.141, FP_DIGITS), 's': round(0.92, FP_DIGITS)}
+        if 'preset2' not in self.db:
+            self.db['preset2'] = {'h': round(0.411, FP_DIGITS), 's': round(1.00, FP_DIGITS)}
+        
         self.write_current_settings_to_hardware()
 
     def _create_and_configure_broker_client(self):
@@ -100,13 +109,17 @@ class TampiService(object):
             self.set_last_client(new_config['client'])
             if 'mode' in new_config:
                 self.set_current_mode(new_config['mode'])
+                # Maybe here add set new preset/cycle...
             if 'on' in new_config:
                 self.set_current_onoff(new_config['on'])
             if 'color' in new_config:
-                 self.set_current_color(new_config['color'])
+                self.set_current_color(new_config['color'])
             if 'brightness' in new_config:
                 self.set_current_brightness(new_config['brightness'] / 100)
+            if 'days' in new_config:
+                self.set_current_days(new_config['days'])
             self.publish_config_change()
+
         except InvalidLampConfig:
             print("error applying new settings " + str(msg.payload))
 
@@ -115,6 +128,7 @@ class TampiService(object):
                   'brightness': self.get_current_brightness(),
                   'on': self.get_current_onoff(),
                   'color': self.get_current_color(),
+                  'days': self.get_current_days(),
                   'client': self.get_last_client()}
         self._client.publish(TOPIC_LAMP_CHANGE_NOTIFICATION,
                              json.dumps(config).encode('utf-8'), qos=1,
@@ -125,6 +139,15 @@ class TampiService(object):
 
     def set_last_client(self, new_client):
         self.db['client'] = new_client
+
+    def get_current_cycle(self):
+        return self.db['cycle']
+    
+    def get_current_preset1(self):
+        return self.db['preset1']
+    
+    def get_current_preset2(self):
+        return self.db['preset2']
 
     def get_current_mode(self):
         return self.db['mode']
@@ -170,6 +193,12 @@ class TampiService(object):
         for ch in ['h', 's']:
             self.db['color'][ch] = round(new_color[ch], FP_DIGITS)
         self.write_current_settings_to_hardware()
+
+    def get_current_days(self):
+        return self.db['days']
+    
+    def set_current_days(self, new_days):
+        self.db['days'] = new_days
 
     def write_current_settings_to_hardware(self):
         onoff = self.get_current_onoff()
