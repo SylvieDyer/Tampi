@@ -8,13 +8,22 @@
 import SwiftUI
 
 struct TampiView: View {
+    @Environment(\.managedObjectContext) private var viewContext
     @ObservedObject var tampi: Tampi
+ 
+    // new user
+    @FetchRequest(
+        sortDescriptors: []
+    )
+    private var users: FetchedResults<User>
     
     var body: some View {
-        if (tampi.userInfo.newUser){
-            UserInfoView(tampi: tampi)
+        if (users.isEmpty || users.first!.newUser){
+            UserInfoView(tampi: tampi, viewContext: viewContext)
         }
-        else {
+            
+        else if (users.first!.newUser == false){
+            
             VStack {
                 HStack(alignment: .lastTextBaseline, spacing:0){
                     Text("Tamp").font(.largeTitle).bold().padding(.leading, 15)
@@ -31,17 +40,17 @@ struct TampiView: View {
                 
                 VStack{
                     if (tampi.appController.home){
-                        HomeView(tampi: tampi)
+                        HomeView(tampi: tampi, user: users.first!)
                     }
                     else if (tampi.appController.tracker){
-                        TrackerView(tampi: tampi)
+                        TrackerView(tampi: tampi, user: users.first!)
                     }
                     else if (tampi.appController.education){
-                        EduView(tampi: tampi)
+                        EduView(tampi: tampi, name: users.first!.name!)
                         
                     }
                     else if (tampi.appController.settings){
-                        SettingsView(tampi: tampi)
+                        SettingsView(tampi: tampi, user: users.first!, viewContext: viewContext)
                     }
                     
                 }
@@ -49,9 +58,7 @@ struct TampiView: View {
                 // bottom nav bar
                 HStack{
                     
-                    Button(action:{
-                        tampi.appController.setHome()
-                    }){
+                    Button(action:{ tampi.appController.setHome() }){
                         Image(systemName: "house.fill")
                             .resizable()
                             .aspectRatio(contentMode: .fit).frame(width: 60, height: 30)
@@ -105,13 +112,36 @@ struct TampiView: View {
                 }.background(Color.indigo.opacity(0.25).edgesIgnoringSafeArea(.bottom))
             }
         }
+        
     }
+    
+//    private func saveInfo(){
+////        let newUser = User(context: viewContext)
+////        newUser.newUser = false
+////        newUser.avgCycleLength = Int32(tampi.userInfo.averageCycleLength)
+////        newUser.periodLength = Int32(tampi.userInfo.periodLength)
+////        newUser.name = tampi.userInfo.userName
+//        users.first!.newUser = false
+//        users.first!.avgCycleLength = Int32(tampi.userInfo.averageCycleLength)
+//        users.first!.periodLength = Int32(tampi.userInfo.periodLength)
+//        users.first!.name = tampi.userInfo.userName
+//
+//        do {
+//            try viewContext.save()
+//        } catch {
+//            // Replace this implementation with code to handle the error appropriately.
+//            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+//            let nsError = error as NSError
+//            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+//        }
+//    }
+    
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        TampiView(tampi: Tampi(name: "LAMPI b827ebdb1217"))
-            .previewDevice("iPhone 12 Pro")
-            .previewLayout(.device)
-    }
-}
+//struct ContentView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        TampiView(tampi: Tampi(name: "LAMPI b827ebdb1217"))
+//            .previewDevice("iPhone 12 Pro")
+//            .previewLayout(.device)
+//    }
+//}

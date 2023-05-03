@@ -19,6 +19,8 @@
 		5A4BDD8429DCC7AD00E0797B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A4BDD8329DCC7AD00E0797B /* ViewController.swift */; };
 		5A67A60C29F5F1A300C4D9C6 /* ElegantCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 5A67A60B29F5F1A300C4D9C6 /* ElegantCalendar */; };
 		5A67A60E29F5F24E00C4D9C6 /* ElegantCalendar.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5A67A60D29F5F24E00C4D9C6 /* ElegantCalendar.xcassets */; };
+		5A73D0012A01E10800C7F232 /* PersistenceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A73D0002A01E10800C7F232 /* PersistenceController.swift */; };
+		5A73D0042A01E3C700C7F232 /* TampiModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5A73D0022A01E3C700C7F232 /* TampiModel.xcdatamodeld */; };
 		5A99524229FAF8FD005B6486 /* UserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A99524129FAF8FD005B6486 /* UserInfoView.swift */; };
 		5AE5CA0929F6F86600718779 /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE5CA0829F6F86600718779 /* CalendarView.swift */; };
 		5AE5CA0B29F6F8A700718779 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AE5CA0A29F6F8A700718779 /* Event.swift */; };
@@ -44,6 +46,8 @@
 		5A4BDD8129DCA81E00E0797B /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		5A4BDD8329DCC7AD00E0797B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		5A67A60D29F5F24E00C4D9C6 /* ElegantCalendar.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = ElegantCalendar.xcassets; path = "../../../../Library/Developer/Xcode/DerivedData/Tampi-fpyicmcnilywhufwugwfnbhntybz/SourcePackages/checkouts/ElegantCalendar/ElegantCalendar.xcassets"; sourceTree = "<group>"; };
+		5A73D0002A01E10800C7F232 /* PersistenceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceController.swift; sourceTree = "<group>"; };
+		5A73D0032A01E3C700C7F232 /* TampiModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TampiModel.xcdatamodel; sourceTree = "<group>"; };
 		5A99524129FAF8FD005B6486 /* UserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoView.swift; sourceTree = "<group>"; };
 		5AE5CA0829F6F86600718779 /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		5AE5CA0A29F6F8A700718779 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
@@ -96,6 +100,8 @@
 				5A4BDD6C29DB759600E0797B /* Assets.xcassets */,
 				5A4BDD6E29DB759600E0797B /* Preview Content */,
 				5A4BDD8329DCC7AD00E0797B /* ViewController.swift */,
+				5A73D0002A01E10800C7F232 /* PersistenceController.swift */,
+				5A73D0022A01E3C700C7F232 /* TampiModel.xcdatamodeld */,
 			);
 			path = Tampi;
 			sourceTree = "<group>";
@@ -218,6 +224,7 @@
 				5AE5CA0D29F6F8B600718779 /* CycleEvent.swift in Sources */,
 				5AE5CA1329F6F93500718779 /* AppDelegate.swift in Sources */,
 				5AE5CA0B29F6F8A700718779 /* Event.swift in Sources */,
+				5A73D0012A01E10800C7F232 /* PersistenceController.swift in Sources */,
 				5AE5CA1729F6FA4800718779 /* Date+Additions.swift in Sources */,
 				5A4BDD6929DB759500E0797B /* TampiApp.swift in Sources */,
 				5A4BDD8029DCA7E100E0797B /* EduView.swift in Sources */,
@@ -229,6 +236,7 @@
 				5AE5CA1129F6F8EC00718779 /* VisitPreviewConstants.swift in Sources */,
 				5A99524229FAF8FD005B6486 /* UserInfoView.swift in Sources */,
 				5A4BDD7929DB786300E0797B /* Tampi.swift in Sources */,
+				5A73D0042A01E3C700C7F232 /* TampiModel.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -374,7 +382,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.Tampi.Tampi;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Tampi.Sylvie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -410,7 +418,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.Tampi.Tampi;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Tampi.Sylvie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -462,6 +470,19 @@
 			productName = ElegantCalendar;
 		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		5A73D0022A01E3C700C7F232 /* TampiModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				5A73D0032A01E3C700C7F232 /* TampiModel.xcdatamodel */,
+			);
+			currentVersion = 5A73D0032A01E3C700C7F232 /* TampiModel.xcdatamodel */;
+			path = TampiModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 5A4BDD5D29DB759500E0797B /* Project object */;
 }

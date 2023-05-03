@@ -15,6 +15,8 @@ struct TrackerView: View {
     @State private var isEditing = false
     @State private var selectedDates: Set<DateComponents> = []
     
+    var user: User
+    
     // updates the calendar display
     func updateCycle() {
         // formatter to put into a string
@@ -118,11 +120,11 @@ struct TrackerView: View {
     }
 }
 
-// delete later:
-struct TrackerView_Preview: PreviewProvider {
-    static var previews: some View {
-        TampiView(tampi: Tampi(name: "LAMPI b827ebdb1217"))
-            .previewDevice("iPhone 12 Pro")
-            .previewLayout(.device)
-    }
-}
+//// delete later:
+//struct TrackerView_Preview: PreviewProvider {
+//    static var previews: some View {
+//        TampiView(tampi: Tampi(name: "LAMPI b827ebdb1217"))
+//            .previewDevice("iPhone 12 Pro")
+//            .previewLayout(.device)
+//    }
+//}

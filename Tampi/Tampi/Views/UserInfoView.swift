@@ -6,9 +6,16 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct UserInfoView: View {
     @ObservedObject var tampi: Tampi
+    var viewContext: NSManagedObjectContext
+    // new user
+    @FetchRequest(
+        sortDescriptors: []
+    )
+    private var users: FetchedResults<User>
     @State private var showingSheet = false
     
     var body: some View {
@@ -30,7 +37,9 @@ struct UserInfoView: View {
                 }
                 
             }.padding(.bottom, 60)
-            Button(action: {showingSheet.toggle()}){
+            Button(action: {showingSheet.toggle()
+                            newUser()
+            }){
                 Text("Get Started!").foregroundColor(.indigo.opacity(0.68))
                     .font(.title2)
                     .bold()
@@ -39,16 +48,30 @@ struct UserInfoView: View {
             //            , content: UserInfoSheet.init){
             // Info Sheet
             .sheet(isPresented: $showingSheet){
-                UserInfoSheet(tampi: tampi)
-                
+                UserInfoSheet(tampi: tampi, user: users.first!, viewContext: viewContext)
             }
+        }
+    }
+    private func newUser() {
+        let newUser = User(context: viewContext)
+        newUser.newUser = true
+        do {
+            try viewContext.save()
+        }catch {
+            // Replace this implementation with code to handle the error appropriately.
+            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
         }
     }
 }
 
 
 struct UserInfoSheet: View {
+
     @ObservedObject var tampi: Tampi
+    var user: User
+    var viewContext: NSManagedObjectContext
     @State private var showingSheet = false
     
     var body: some View{
@@ -92,10 +115,10 @@ struct UserInfoSheet: View {
                 }.pickerStyle(.wheel).frame(height: 100)
             }
             
-            
             Button(action: {
+                saveInfo()
                 showingSheet = false
-                tampi.userInfo.newUser = false
+//                tampi.userInfo.newUser = false
             }){
                 HStack{
                     Spacer()
@@ -110,9 +133,28 @@ struct UserInfoSheet: View {
             }.disabled(tampi.userInfo.userName.isEmpty)
         }
     }
-}
-struct UserInfoView_Previews: PreviewProvider {
-    static var previews: some View {
-        UserInfoView(tampi: Tampi(name: "LAMPI b827ebdb1727"))
+    
+   
+    
+    private func saveInfo(){
+        // save to DB attributes
+        user.newUser = false
+        user.avgCycleLength = Int32(tampi.userInfo.averageCycleLength)
+        user.periodLength = Int32(tampi.userInfo.periodLength)
+        user.name = tampi.userInfo.userName
+        
+        do {
+            try viewContext.save()
+        } catch {
+            // Replace this implementation with code to handle the error appropriately.
+            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
     }
 }
+//struct UserInfoView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        UserInfoView(tampi: Tampi(name: "LAMPI b827ebdb1727"))
+//    }
+//}

@@ -6,9 +6,12 @@
 //
 
 import SwiftUI
+import CoreData
 
 struct SettingsView: View {
     @ObservedObject var tampi: Tampi
+    var user: User
+    var viewContext: NSManagedObjectContext
     // to dictate sheet opening
     @State private var showUserInfo = false
     @State private var showChangePresets = false
@@ -25,7 +28,7 @@ struct SettingsView: View {
                     showUserInfo.toggle()
                 }
                 .sheet(isPresented: $showUserInfo) {
-                    UserInfoSheet(tampi: tampi)
+                    UserInfoSheet(tampi: tampi, user: user, viewContext: viewContext)
                 }
                 .fontWeight(.heavy)
                 .foregroundColor(.indigo)
@@ -93,11 +96,11 @@ struct SettingsView: View {
     }
 }
 
-struct ContentView_Previews2: PreviewProvider {
-    static var previews: some View {
-        TampiView(tampi: Tampi(name: "LAMPI b827ebdb1217"))
-            .previewDevice("iPhone 12 Pro")
-            .previewLayout(.device)
-    }
-}
+//struct ContentView_Previews2: PreviewProvider {
+//    static var previews: some View {
+//        TampiView(tampi: Tampi(name: "LAMPI b827ebdb1217"))
+//            .previewDevice("iPhone 12 Pro")
+//            .previewLayout(.device)
+//    }
+//}
 

@@ -9,6 +9,8 @@ import SwiftUI
 
 struct EduView: View {
     @ObservedObject var tampi: Tampi
+    var name: String
+    
     var body: some View {
         VStack{
             List {
@@ -56,12 +58,12 @@ struct EduView: View {
     }
 }
 
-// delete later
-struct ContentView_Previews5: PreviewProvider {
-    static var previews: some View {
-        TampiView(tampi: Tampi(name: "LAMPI b827ebdb1217"))
-            .previewDevice("iPhone 12 Pro")
-            .previewLayout(.device)
-    }
-}
+//// delete later
+//struct ContentView_Previews5: PreviewProvider {
+//    static var previews: some View {
+//        TampiView(tampi: Tampi(name: "LAMPI b827ebdb1217"))
+//            .previewDevice("iPhone 12 Pro")
+//            .previewLayout(.device)
+//    }
+//}
 

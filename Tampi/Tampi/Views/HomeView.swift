@@ -9,13 +9,15 @@ import SwiftUI
 
 struct HomeView: View{
     @ObservedObject var tampi: Tampi
+    var user: User
     
     var body: some View{
         
         List {
             // home-header section
             Section {
-                Text("Welcome Back, \(tampi.userInfo.userName)!").bold().font(.title2)
+                //Text("Welcome Back, \(tampi.userInfo.userName)!").bold().font(.title2)
+                Text("Welcome Back, \(user.name ?? "No Username Entered")!").bold().font(.title2)
             }
             
             // info on cycle
@@ -24,7 +26,8 @@ struct HomeView: View{
                     Spacer()
                     // when the user has put in cycle information
                     if tampi.userInfo.daysUntilNewCycle != 666{
-                        Text("There are **\(tampi.userInfo.daysUntilNewCycle)** days until your next cycle begins").font(.title3).multilineTextAlignment(.center).fontWeight(.semibold).foregroundColor(.black.opacity(0.6))
+                       // Text("There are **\(tampi.userInfo.daysUntilNewCycle)** days until your next cycle begins").font(.title3).multilineTextAlignment(.center).fontWeight(.semibold).foregroundColor(.black.opacity(0.6))
+                        Text("There are **\(user.daysToNext)** days until your next cycle begins").font(.title3).multilineTextAlignment(.center).fontWeight(.semibold).foregroundColor(.black.opacity(0.6))
                     }
                     // when no information has been put in
                     else {
@@ -111,12 +114,12 @@ struct HomeView: View{
 }
 
 
-// delete later:
-struct ContentView_Previews1: PreviewProvider {
-    static var previews: some View {
-        TampiView(tampi: Tampi(name: "LAMPI b827ebdb1217"))
-            .previewDevice("iPhone 12 Pro")
-            .previewLayout(.device)
-    }
-}
+//// delete later:
+//struct ContentView_Previews1: PreviewProvider {
+//    static var previews: some View {
+//        TampiView(tampi: Tampi(name: "LAMPI b827ebdb1217"))
+//            .previewDevice("iPhone 12 Pro")
+//            .previewLayout(.device)
+//    }
+//}
 
