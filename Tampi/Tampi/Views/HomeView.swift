@@ -16,7 +16,6 @@ struct HomeView: View{
         List {
             // home-header section
             Section {
-                //Text("Welcome Back, \(tampi.userInfo.userName)!").bold().font(.title2)
                 Text("Welcome Back, \(user.name ?? "No Username Entered")!").bold().font(.title2)
             }
             
@@ -25,8 +24,7 @@ struct HomeView: View{
                 HStack{
                     Spacer()
                     // when the user has put in cycle information
-                    if tampi.userInfo.daysUntilNewCycle != 666{
-                       // Text("There are **\(tampi.userInfo.daysUntilNewCycle)** days until your next cycle begins").font(.title3).multilineTextAlignment(.center).fontWeight(.semibold).foregroundColor(.black.opacity(0.6))
+                    if user.daysToNext != 666{
                         Text("There are **\(user.daysToNext)** days until your next cycle begins").font(.title3).multilineTextAlignment(.center).fontWeight(.semibold).foregroundColor(.black.opacity(0.6))
                     }
                     // when no information has been put in
@@ -88,7 +86,7 @@ struct HomeView: View{
                             .foregroundColor(.yellow.opacity(0.7))
                         
                         
-                        Text("\(tampi.appController.preset1)")
+                        Text("\(user.preset1 ?? "Preset 1" )")
                             .foregroundColor(tampi.lampiState.mode == 1 ? .yellow.opacity(0.7) : .gray).font(.title3).fontWeight(.heavy)
                     }
                 }
@@ -102,24 +100,12 @@ struct HomeView: View{
                             .aspectRatio(contentMode: .fit).frame(width: 30, height: 20)
                             .foregroundColor(.green.opacity(0.7))
                         
-                        Text("\(tampi.appController.preset2)")
+                        Text("\(user.preset2 ?? "Preset 2")")
                             .foregroundColor(tampi.lampiState.mode == 2 ? .green.opacity(0.7) : .gray).font(.title3).fontWeight(.heavy)
                     }
                     
                 }
             }
-            
         }
     }
 }
-
-
-//// delete later:
-//struct ContentView_Previews1: PreviewProvider {
-//    static var previews: some View {
-//        TampiView(tampi: Tampi(name: "LAMPI b827ebdb1217"))
-//            .previewDevice("iPhone 12 Pro")
-//            .previewLayout(.device)
-//    }
-//}
-

@@ -15,7 +15,7 @@ struct EduView: View {
         VStack{
             List {
                 Section{
-                    Text("Welcome to the Education Page, \(tampi.userInfo.userName)!").bold().font(.title2)
+                    Text("Welcome to the Education Page, \(name)!").bold().font(.title2)
                     Text("Explore these medically verified resources to learn more about the menstural cycle:  ").font(.subheadline).bold()
                 }
                 

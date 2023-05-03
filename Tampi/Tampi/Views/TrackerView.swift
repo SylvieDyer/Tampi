@@ -8,6 +8,7 @@ import SwiftUI
 import UIKit
 import UniformTypeIdentifiers
 import ElegantCalendar
+import CoreData
 
 struct TrackerView: View {
     
@@ -16,12 +17,18 @@ struct TrackerView: View {
     @State private var selectedDates: Set<DateComponents> = []
     
     var user: User
+    var viewContext: NSManagedObjectContext
+    // the cycle dates entity
+    @FetchRequest(sortDescriptors: [])
+    private var cycleDates: FetchedResults<CycleDates>
     
     // updates the calendar display
     func updateCycle() {
         // formatter to put into a string
         let formatter = DateFormatter()
         formatter.dateFormat = "M/dd/yyyy"
+        
+        var dateString = ""
         
         // remove the dates that have been unselected
         for date in tampi.userInfo.editCycleDates.subtracting(selectedDates) {
@@ -30,7 +37,11 @@ struct TrackerView: View {
         
         // add the new dates that have been selected
         for date in selectedDates.subtracting(tampi.userInfo.editCycleDates){
-            tampi.userInfo.cycleDates.insert(formatter.string(from: date.date!))
+            dateString = formatter.string(from: date.date!)
+            tampi.userInfo.cycleDates.insert(dateString)
+            // add new dates to DB
+            let newDate = CycleDates(context: viewContext)
+            newDate.cycleDate = dateString
         }
         
         // ensure the changes are saved when the datepicker is opened again
@@ -38,6 +49,24 @@ struct TrackerView: View {
         
         // predicts the next cycle
         tampi.userInfo.predict()
+        user.daysToNext = Int32(tampi.userInfo.daysUntilNewCycle)       // update that prediction in the db
+        
+        // save to DB new DB dates (that have been removed)
+        for date in cycleDates {
+            // if the date isn't in cycle dates
+            if (!tampi.userInfo.cycleDates.contains(date.cycleDate!)){
+                viewContext.delete(date)
+            }
+        }
+        // save DB
+        do {
+            try viewContext.save()
+        } catch {
+            // Replace this implementation with code to handle the error appropriately.
+            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
     }
   
     var body: some View {
@@ -55,12 +84,6 @@ struct TrackerView: View {
             
             // calendar and edit
             Section{
-//                Button (action: {
-//                    
-//                    print(tampi.userInfo.nextCycle)
-//                }) {
-//                    Text("TEST")
-//                }
                 HStack{
                     Button(action: {
                         // open the sheet
@@ -71,7 +94,6 @@ struct TrackerView: View {
                         HStack {
                             Spacer()
                             Image(systemName: "square.and.pencil").resizable().frame(width: 20, height: 23)
-//                      Text("Edit").font(.title3).frame(height: 20)
                         }.foregroundColor(.indigo).frame(height:10)
                         
                     // pop up for the multidate selector
@@ -114,17 +136,8 @@ struct TrackerView: View {
                     .frame(height: 600)
                     Spacer()
                 }.padding(10)
-                
             }
         }
     }
+       
 }
-
-//// delete later:
-//struct TrackerView_Preview: PreviewProvider {
-//    static var previews: some View {
-//        TampiView(tampi: Tampi(name: "LAMPI b827ebdb1217"))
-//            .previewDevice("iPhone 12 Pro")
-//            .previewLayout(.device)
-//    }
-//}

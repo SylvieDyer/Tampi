@@ -10,19 +10,24 @@ import SwiftUI
 struct TampiView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @ObservedObject var tampi: Tampi
- 
-    // new user
+    
+    // the user
     @FetchRequest(
         sortDescriptors: []
     )
     private var users: FetchedResults<User>
     
+    // the cycle dates entity
+    @FetchRequest(sortDescriptors: [])
+    private var cycleDates: FetchedResults<CycleDates>
+    
+    
     var body: some View {
-        if (users.isEmpty || users.first!.newUser){
+        if (users.isEmpty || users.first!.newUser) {
             UserInfoView(tampi: tampi, viewContext: viewContext)
         }
-            
-        else if (users.first!.newUser == false){
+        
+        else if (users.first!.newUser == false) {
             
             VStack {
                 HStack(alignment: .lastTextBaseline, spacing:0){
@@ -43,7 +48,7 @@ struct TampiView: View {
                         HomeView(tampi: tampi, user: users.first!)
                     }
                     else if (tampi.appController.tracker){
-                        TrackerView(tampi: tampi, user: users.first!)
+                        TrackerView(tampi: tampi, user: users.first!, viewContext: viewContext)
                     }
                     else if (tampi.appController.education){
                         EduView(tampi: tampi, name: users.first!.name!)
@@ -52,12 +57,10 @@ struct TampiView: View {
                     else if (tampi.appController.settings){
                         SettingsView(tampi: tampi, user: users.first!, viewContext: viewContext)
                     }
-                    
                 }
                 
                 // bottom nav bar
                 HStack{
-                    
                     Button(action:{ tampi.appController.setHome() }){
                         Image(systemName: "house.fill")
                             .resizable()
@@ -70,6 +73,7 @@ struct TampiView: View {
                     .background(tampi.appController.home ? .white.opacity(0.3) : .clear)
                     
                     Button(action: {
+                        updateTampiCalendar()               // pull data from DB for calendar
                         tampi.appController.setTracker()
                     }) {
                         Image(systemName: "calendar")
@@ -96,6 +100,7 @@ struct TampiView: View {
                     .background(tampi.appController.education ? .white.opacity(0.3) : .clear)
                     
                     Button(action: {
+                        updateSettingsInfo()             // pull data from DB for settings page
                         tampi.appController.setSettings()
                     }) {
                         Image(systemName: "gear")
@@ -112,36 +117,33 @@ struct TampiView: View {
                 }.background(Color.indigo.opacity(0.25).edgesIgnoringSafeArea(.bottom))
             }
         }
-        
     }
     
-//    private func saveInfo(){
-////        let newUser = User(context: viewContext)
-////        newUser.newUser = false
-////        newUser.avgCycleLength = Int32(tampi.userInfo.averageCycleLength)
-////        newUser.periodLength = Int32(tampi.userInfo.periodLength)
-////        newUser.name = tampi.userInfo.userName
-//        users.first!.newUser = false
-//        users.first!.avgCycleLength = Int32(tampi.userInfo.averageCycleLength)
-//        users.first!.periodLength = Int32(tampi.userInfo.periodLength)
-//        users.first!.name = tampi.userInfo.userName
-//
-//        do {
-//            try viewContext.save()
-//        } catch {
-//            // Replace this implementation with code to handle the error appropriately.
-//            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-//            let nsError = error as NSError
-//            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-//        }
-//    }
+    private func updateTampiCalendar(){
+        // if there is info to save,
+        if (!cycleDates.isEmpty){
+            // if the app has just ben reopened (no data in cycleDates), add all dates
+            if (tampi.userInfo.cycleDates.count == 0 ){
+                let formatter = DateFormatter()
+                formatter.dateFormat = "M/dd/yyyy"
+                for entity in cycleDates{
+                    tampi.userInfo.cycleDates.insert(entity.cycleDate!)
+                    let dayToAdd = formatter.date(from: entity.cycleDate!)
+                    tampi.userInfo.editCycleDates.insert(Calendar.current.dateComponents([.year, .month, .day], from: dayToAdd!))
+                }
+                tampi.userInfo.predict()
+            }
+        }
+    }
     
+    private func updateSettingsInfo(){
+        // if the DB isn't empty, and the info hasn't been updated
+        if (!users.isEmpty && tampi.userInfo.userName != users.first!.name){
+            tampi.userInfo.userName = users.first!.name ?? "No Name Entered"
+            tampi.userInfo.averageCycleLength = Int(users.first!.avgCycleLength)
+            tampi.userInfo.periodLength = Int(users.first!.periodLength)
+            tampi.appController.preset1 = users.first!.preset1 ?? "Preset 1"
+            tampi.appController.preset2 = users.first!.preset2 ?? "Preset 2"
+        }
+    }
 }
-
-//struct ContentView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        TampiView(tampi: Tampi(name: "LAMPI b827ebdb1217"))
-//            .previewDevice("iPhone 12 Pro")
-//            .previewLayout(.device)
-//    }
-//}

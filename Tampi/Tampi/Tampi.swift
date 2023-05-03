@@ -44,7 +44,6 @@ class Tampi: NSObject, ObservableObject {
     // to track the number of days to next cycle
     private var remaningDaysCharacteristic: CBCharacteristic?
 
-    // MARK: State Tracking
     private var skipNextDeviceUpdate = false
     private var pendingBluetoothUpdate = false
 
@@ -70,9 +69,8 @@ class Tampi: NSObject, ObservableObject {
 }
 
 extension Tampi {
-    // TODO: FRom class may want to change?
-    //       Implement HSV characteristic (to change cylce color)?
-    //       Add brightness (maybe no)
+//       Implement HSV characteristic (to change cylce color)?
+//       Add brightness (maybe no)
     static let SERVICE_UUID = CBUUID(string: "0001A7D3-D8A4-4FEA-8174-1736E808C066")
     static let HSM_UUID = CBUUID(string: "0002A7D3-D8A4-4FEA-8174-1736E808C066")
     static let POWERSTATE_UUID = CBUUID(string: "0004A7D3-D8A4-4FEA-8174-1736E808C066")
@@ -107,8 +105,7 @@ extension Tampi {
     
     private func writeDays() {
         if let remaningDaysCharacteristic = remaningDaysCharacteristic {
-            var days = 15 // TODO: Tie this to some state variable (i.e. lampiState.days) ?
-            let data = Data(bytes: &days, count: 1)
+            let data = Data(bytes: &userInfo.daysUntilNewCycle, count: 1)
             lampiPeripheral?.writeValue(data, for: remaningDaysCharacteristic, type:.withResponse)
         }
     }
@@ -142,12 +139,9 @@ extension Tampi {
             lampiPeripheral?.writeValue(data, for: HSMCharacteristic, type: .withResponse)
         }
     }
-    
 }
 
 extension Tampi {
-    
-   
     // to track changes on the lamp (may not even be doing this ?)
     struct LampiState: Equatable {
         var isConnected = false
@@ -155,12 +149,10 @@ extension Tampi {
         var mode: Int = 0
         var hue: Double = 0.0
         var sat: Double = 0.0
-        var days: Int = 10
     }
     
     struct UserInfo: Equatable {
-        var newUser = true //TODO: CHANG BACK
-        // menstruator
+        // menstruator name
         var userName: String = ""
         
         // average cycle length - defaults at 28
@@ -200,6 +192,8 @@ extension Tampi {
                 for i in 1...periodLength-1 {
                     nextCycle.insert(Calendar.current.date(byAdding: .day, value: i, to: newDayOne!)!)
                 }
+                // dayOne+ averageCycleLength
+                daysUntilNewCycle =  Int(nextDayOne.timeIntervalSince(Date())/86400)
             }
         }
         
@@ -207,15 +201,7 @@ extension Tampi {
         var nextDayOne: Date = Date()
         
         // finds the days until the next cycle
-        var daysUntilNewCycle: Int{
-            // if no user information has been put in, put fake value
-            if (cycleDates.isEmpty){
-                return 666
-            }
-            // dayOne+ averageCycleLength
-            return Int(nextDayOne.timeIntervalSince(Date())/86400)
-        }
-    
+        var daysUntilNewCycle: Int = 666
     }
     
     // to control the app & page being shown

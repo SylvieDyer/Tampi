@@ -45,16 +45,19 @@ struct UserInfoView: View {
                     .bold()
                     .font(.callout)
             }
-            //            , content: UserInfoSheet.init){
             // Info Sheet
             .sheet(isPresented: $showingSheet){
-                UserInfoSheet(tampi: tampi, user: users.first!, viewContext: viewContext)
+                UserInfoSheet(tampi: tampi, user: users.first!, viewContext: viewContext, showingSheet: $showingSheet)
             }
         }
     }
     private func newUser() {
         let newUser = User(context: viewContext)
         newUser.newUser = true
+        // other default values
+        newUser.preset1 = "Preset 1"
+        newUser.preset2 = "Preset 2"
+        newUser.daysToNext = 666
         do {
             try viewContext.save()
         }catch {
@@ -72,11 +75,11 @@ struct UserInfoSheet: View {
     @ObservedObject var tampi: Tampi
     var user: User
     var viewContext: NSManagedObjectContext
-    @State private var showingSheet = false
+    @Binding var showingSheet: Bool
     
     var body: some View{
         Section{
-            if (tampi.userInfo.newUser){
+            if (user.newUser){
                 Text("Getting Started").font(.title).bold()
                 Text("Please fill out the following fields!").font(.title2).bold()
             }
@@ -118,11 +121,10 @@ struct UserInfoSheet: View {
             Button(action: {
                 saveInfo()
                 showingSheet = false
-//                tampi.userInfo.newUser = false
             }){
                 HStack{
                     Spacer()
-                    if (tampi.userInfo.newUser){
+                    if (user.newUser){
                         Text("I'm ready to use TAMPI!").font(.title2).font(.callout).bold().foregroundColor(.indigo.opacity(0.8))
                     }
                     else {

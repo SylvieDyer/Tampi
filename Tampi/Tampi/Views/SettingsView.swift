@@ -20,7 +20,7 @@ struct SettingsView: View {
     var body: some View {
         List {
             Section {
-                Text("Welcome to the Settings Page, \(tampi.userInfo.userName)!").bold().font(.title2)
+                Text("Welcome to the Settings Page, \(user.name ?? "No Name Found" )!").bold().font(.title2)
             }
             Section{
                 // edit user settings
@@ -28,24 +28,12 @@ struct SettingsView: View {
                     showUserInfo.toggle()
                 }
                 .sheet(isPresented: $showUserInfo) {
-                    UserInfoSheet(tampi: tampi, user: user, viewContext: viewContext)
+                    UserInfoSheet(tampi: tampi, user: user, viewContext: viewContext, showingSheet: $showUserInfo)
                 }
                 .fontWeight(.heavy)
                 .foregroundColor(.indigo)
                 .font(.title3)
-                
-                // edit presets
-                Button("Change Presets") {
-                    showChangePresets.toggle()
-                }
-                .sheet(isPresented: $showChangePresets) {
-                    
-                    VStack{
-                        Text("Change Presets")
-                        Spacer()
-                    }
-                }
-                
+
                 // edit preset names
                 Button("Change Preset Names") {
                     showChangePresetNames.toggle()
@@ -77,6 +65,7 @@ struct SettingsView: View {
                         Section(footer: Text("All fields must be filled to save!").font(.subheadline)){
                             Button(action: {
                                 showChangePresetNames = false
+                                savePresets()
                             }){
                                 HStack(alignment: .center){
                                     Text("Save Changes").font(.title2).font(.callout).bold().foregroundColor(.indigo.opacity(0.8))
@@ -93,6 +82,20 @@ struct SettingsView: View {
         }.scrollDisabled(true).padding(.bottom, 0)
         
         Spacer()
+    }
+    
+    private func savePresets(){
+        user.preset1 = tampi.appController.preset1
+        user.preset2 = tampi.appController.preset2
+        
+        do {
+            try viewContext.save()
+        } catch {
+            // Replace this implementation with code to handle the error appropriately.
+            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
     }
 }
 

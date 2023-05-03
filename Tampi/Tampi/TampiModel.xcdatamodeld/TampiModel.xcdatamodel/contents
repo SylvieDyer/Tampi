@@ -9,5 +9,7 @@
         <attribute name="name" optional="YES" attributeType="String"/>
         <attribute name="newUser" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="periodLength" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="preset1" optional="YES" attributeType="String"/>
+        <attribute name="preset2" optional="YES" attributeType="String"/>
     </entity>
 </model>
