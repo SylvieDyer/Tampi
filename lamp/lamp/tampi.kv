@@ -4,6 +4,7 @@
 
 #:include lamp/controls/gradient_slider.kv
 #:include lamp/controls/lampi_toggle.kv
+#:include lamp/controls/color_box.kv
 #:include lamp/colors.kv
 
 BoxLayout:
@@ -16,44 +17,50 @@ BoxLayout:
 
     orientation: 'vertical'
 
-    Label:
-        text: 'Tampi'
-        font_size: 20    
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 20
+        size_hint_y: 0.76
 
-    Label:
-        text: 'There are '+str(app.remainingDays) + ' until the start of the next cycle'
-        text_size: self.width, None
-        size_hint: 1, None
-        height: self.texture_size[1]
-        halign: 'center' 
-        padding: dp(15), dp(30)
+        Label:
+            text: 'Tampi'
+            font_size: 20    
 
-    ToggleButton:
-        text: 'Cycle'
-        state: app.cycle
-        on_state: app.cycle = self.state
+        Label:
+            text: 'There are '+str(app.remainingDays) + ' until the start of the next cycle'
+            text_size: self.width, None
+            size_hint: 1, None
+            height: self.texture_size[1]
+            halign: 'center' 
+            padding: dp(15), dp(30)
 
-    ToggleButton:
-        text: 'Preset 1'
-        state: app.preset1
-        on_state: app.preset1 = self.state
+        ToggleButton:
+            text: 'Cycle'
+            state: app.cycle
+            on_state: app.cycle = self.state
 
-    ToggleButton:
-        text: 'Preset 2'
-        state: app.preset2
-        on_state: app.preset2 = self.state
+        ToggleButton:
+            text: 'Preset 1'
+            state: app.preset1
+            on_state: app.preset1 = self.state
 
-    Slider:
-        value: app.brightness
-        on_value: app.brightness = self.value
+        ToggleButton:
+            text: 'Preset 2'
+            state: app.preset2
+            on_state: app.preset2 = self.state
+
+        Slider:
+            padding: 20
+            value: app.brightness
+            on_value: app.brightness = self.value
 
     BoxLayout:
         orientation: 'vertical'
-        size_hint_y: 0.43
-
+        size_hint_y: 0.08
+  
         LampiToggle:
             id: button_onoff
-            size_hint_y: 0.90
+            size_hint_y: 0.50
             image: 'images/power_icon_light.png'
             accent_color: hsv_to_rgb(0.5, 0.5, 1.0)
             text: ''
