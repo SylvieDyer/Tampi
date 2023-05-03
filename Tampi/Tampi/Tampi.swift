@@ -211,7 +211,7 @@ extension Tampi {
         var nextDayOne: Date = Date()
         
         // finds the days until the next cycle
-        var daysUntilNewCycle: Int = 666
+        var daysUntilNewCycle: Int = 50
     }
     
     // to control the app & page being shown
@@ -262,13 +262,18 @@ extension Tampi: CBCentralManagerDelegate {
     
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         print("SCANNING>>")
+        print(central.state == .poweredOn)
         if central.state == .poweredOn {
             let services = [CBUUID(string:Tampi.OUR_SERVICE_UUID)]
+            print(services)
+            
             bluetoothManager?.scanForPeripherals(withServices: services)
         }
+        
     }
 
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
+        print("Not courrect found \(peripheral.name)")
         if peripheral.name == Tampi.DEVICE_NAME_L || peripheral.name == Tampi.DEVICE_NAME_S {
             print("Found \(peripheral.name)")
 

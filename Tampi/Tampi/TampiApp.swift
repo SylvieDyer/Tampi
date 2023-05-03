@@ -10,7 +10,7 @@ import UIKit
 
 @main
 struct TampiApp: App {
-    let DEVICE_NAME = "LAMPI b827ebdb1727"
+    let DEVICE_NAME = "TAMPI b827eb3d9134"
     let persistenceController = PersistenceController.shared
 
 
