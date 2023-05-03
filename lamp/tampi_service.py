@@ -63,8 +63,12 @@ class TampiService(object):
             self.db['on'] = True
         if 'client' not in self.db:
             self.db['client'] = ''
-        if 'days' not in self.db:
-            self.db['days'] = 0
+        if 'avgCycle' not in self.db:
+            self.db['avgCycle'] = 20
+        if 'avgPeriod' not in self.db:
+            self.db['avgPeriod'] = 5
+        if 'predicted' not in self.db:
+            self.db['predicted'] = 0
         if 'cycle' not in self.db:
             self.db['cycle'] = {'h': round(0.00, FP_DIGITS), 's': round(1.00, FP_DIGITS)}
         if 'preset1' not in self.db:
@@ -108,8 +112,12 @@ class TampiService(object):
             if 'client' not in new_config:
                 raise InvalidLampConfig()
             self.set_last_client(new_config['client'])
-            if 'days' in new_config:
-                self.set_current_days(new_config['days'])
+            if 'avgCycle' in new_config:
+                self.set_avg_cycle(new_config['avgCycle'])
+            if 'avgPeriod' in new_config:
+                self.set_avg_period(new_config['avgPeriod'])
+            if 'predicted' in new_config:
+                self.set_current_days(new_config['predicted'])
             if 'mode' in new_config:
                 self.set_current_mode(new_config['mode'])
                 # Maybe here add set new preset/cycle...
@@ -119,8 +127,6 @@ class TampiService(object):
                 self.set_current_color(new_config['color'])
             if 'brightness' in new_config:
                 self.set_current_brightness(new_config['brightness'] / 100)
-            #if 'days' in new_config:
-            #    self.set_current_days(new_config['days'])
             self.publish_config_change()
 
         except InvalidLampConfig:
@@ -131,7 +137,9 @@ class TampiService(object):
                   'brightness': self.get_current_brightness(),
                   'on': self.get_current_onoff(),
                   'color': self.get_current_color(),
-                  'days': self.get_current_days(),
+                  'avgCycle': self.get_avg_cycle(),
+                  'avgPeriod': self.get_avg_period(),
+                  'predicted': self.get_current_days(),
                   'client': self.get_last_client()}
         self._client.publish(TOPIC_LAMP_CHANGE_NOTIFICATION,
                              json.dumps(config).encode('utf-8'), qos=1,
@@ -147,7 +155,6 @@ class TampiService(object):
         return self.db['cycle']
 
     def set_current_cycle(self, new_cycle):
-        print("SETTING NEW CYCLE: " + new_cycle)
         self.db['cycle'] = new_cycle
 
     def get_current_preset1(self):
@@ -205,17 +212,30 @@ class TampiService(object):
             self.db['color'][ch] = round(new_color[ch], FP_DIGITS)
         self.write_current_settings_to_hardware()
 
+    def set_avg_cycle(self, days):
+        self.db['avgCycle'] = days
+
+    def set_avg_period(self, days):
+        self.db['avgPeriod'] = days
+
+    def get_avg_cycle(self):
+        return self.db['avgCycle']
+
+    def get_avg_period(self):
+        return self.db['avgPeriod']
+
     def get_current_days(self):
-        print("GETTING CURRENT DAYS")
-        return self.db['days']
+        return self.db['predicted']
 
     def set_current_days(self, new_days):
-        self.db['days'] = new_days
+        self.db['predicted'] = new_days
         self.CYCLE = self.generate_new_cycle(new_days)
-        self.set_current_mode(self.db["mode"])
+        self.set_current_mode(self.get_current_mode())
 
     def generate_new_cycle(self, days):
-        if days < 5:
+        if (self.get_avg_cycle() - self.get_avg_period()) < days:
+            return {'h': round(0.00, FP_DIGITS), 's': round(1.00, FP_DIGITS)}
+        elif days < 5:
             return {'h': round(0.00, FP_DIGITS), 's': round(1.00, FP_DIGITS)}
         elif days < 10:
             return {'h': round(0.35, FP_DIGITS), 's': round(0.78, FP_DIGITS)}
@@ -223,8 +243,10 @@ class TampiService(object):
             return {'h': round(0.20, FP_DIGITS), 's': round(0.91, FP_DIGITS)}
         elif days < 20:
             return {'h': round(0.40, FP_DIGITS), 's': round(0.84, FP_DIGITS)}
+        elif days < 25:
+            return {'h': round(0.98, FP_DIGITS), 's': round(0.88, FP_DIGITS)}
         else:
-            return {'h': round(0.85, FP_DIGITS), 's': round(0.61, FP_DIGITS)}
+            return {'h': round(0.00, FP_DIGITS), 's': round(1, FP_DIGITS)}
 
 
     def write_current_settings_to_hardware(self):

@@ -161,14 +161,13 @@ class TampiApp(App):
                     self.preset2 = 'down'
 
             if 'brightness' in new_state:
-                print("NEW BRIGHTNESS:{}".format(new_state['brightness']))
                 self.brightness = new_state['brightness'] * 100
 
             if 'on' in new_state:
                 self.lamp_is_on = new_state['on']
 
-            if 'days' in new_state:
-                self.remainingDays = new_state['days']
+            if 'predicted' in new_state:
+                self.remainingDays = new_state['predicted']
         finally:
             self._updatingUI = False
 
@@ -180,7 +179,7 @@ class TampiApp(App):
         print("update lamp mode: ")
         print(self._brightness)
         msg = {'mode': self.curr_mode,
-               'days': self.remainingDays,
+               'predicted': self.remainingDays,
                'brightness': self._brightness,
                'on': self.lamp_is_on,
                'client': MQTT_CLIENT_ID}
