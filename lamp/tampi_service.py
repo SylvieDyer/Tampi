@@ -237,7 +237,7 @@ class TampiService(object):
         if (self.get_avg_cycle() - self.get_avg_period()) <= days:
             return {'h': round(0.00, FP_DIGITS), 's': round(1.00, FP_DIGITS)}
         else:
-            # light red
+            # warning yellow
             if days < 5:
                 return {'h': round(0.13, FP_DIGITS), 's': round(0.84, FP_DIGITS)}
             # teal
@@ -252,8 +252,8 @@ class TampiService(object):
             # blue
             elif days < 25:
                 return {'h': round(0.66, FP_DIGITS), 's': round(0.94, FP_DIGITS)}
-        else:
-            return {'h': round(0.00, FP_DIGITS), 's': round(1, FP_DIGITS)}
+            else:
+                return {'h': round(0.00, FP_DIGITS), 's': round(1, FP_DIGITS)}
 
 
     def write_current_settings_to_hardware(self):
