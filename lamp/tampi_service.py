@@ -20,10 +20,6 @@ MQTT_CLIENT_ID = "tampi_service"
 
 FP_DIGITS = 2
 
-CYCLE   = {'h': round(0.00, FP_DIGITS), 's': round(1.00, FP_DIGITS)}
-PRESET1 = {'h': round(0.141, FP_DIGITS), 's': round(0.92, FP_DIGITS)}
-PRESET2 = {'h': round(0.411, FP_DIGITS), 's': round(1.00, FP_DIGITS)}
-
 
 class InvalidLampConfig(Exception):
     pass
@@ -50,6 +46,11 @@ class TampiService(object):
         self.lamp_driver = LampDriver()
         self._client = self._create_and_configure_broker_client()
         self.db = shelve.open(LAMP_STATE_FILENAME, writeback=True)
+
+        self.CYCLE   = {'h': round(0.00, FP_DIGITS), 's': round(1.00, FP_DIGITS)}
+        self.PRESET1 = {'h': round(0.141, FP_DIGITS), 's': round(0.92, FP_DIGITS)}
+        self.PRESET2 = {'h': round(0.411, FP_DIGITS), 's': round(1.00, FP_DIGITS)}
+
 
         if 'mode' not in self.db:
             self.db['mode'] = 0
@@ -107,6 +108,8 @@ class TampiService(object):
             if 'client' not in new_config:
                 raise InvalidLampConfig()
             self.set_last_client(new_config['client'])
+            if 'days' in new_config:
+                self.set_current_days(new_config['days'])
             if 'mode' in new_config:
                 self.set_current_mode(new_config['mode'])
                 # Maybe here add set new preset/cycle...
@@ -116,8 +119,8 @@ class TampiService(object):
                 self.set_current_color(new_config['color'])
             if 'brightness' in new_config:
                 self.set_current_brightness(new_config['brightness'] / 100)
-            if 'days' in new_config:
-                self.set_current_days(new_config['days'])
+            #if 'days' in new_config:
+            #    self.set_current_days(new_config['days'])
             self.publish_config_change()
 
         except InvalidLampConfig:
@@ -144,6 +147,7 @@ class TampiService(object):
         return self.db['cycle']
 
     def set_current_cycle(self, new_cycle):
+        print("SETTING NEW CYCLE: " + new_cycle)
         self.db['cycle'] = new_cycle
 
     def get_current_preset1(self):
@@ -164,11 +168,11 @@ class TampiService(object):
     def set_current_mode(self, new_mode):
         self.db['mode'] = new_mode
         if new_mode == 0:
-            self.set_current_color(CYCLE)
+            self.set_current_color(self.CYCLE)
         elif new_mode == 1:
-            self.set_current_color(PRESET1)
+            self.set_current_color(self.PRESET1)
         elif new_mode == 2:
-            self.set_current_color(PRESET2)
+            self.set_current_color(self.PRESET2)
 
         # self.write_current_settings_to_hardware()
 
@@ -176,8 +180,6 @@ class TampiService(object):
         return self.db['brightness']
 
     def set_current_brightness(self, new_brightness):
-        print("set brightness")
-        print(new_brightness)
         if new_brightness < 0 or new_brightness > 1.0:
             raise InvalidLampConfig()
         self.db['brightness'] = round(new_brightness, FP_DIGITS)
@@ -204,10 +206,26 @@ class TampiService(object):
         self.write_current_settings_to_hardware()
 
     def get_current_days(self):
+        print("GETTING CURRENT DAYS")
         return self.db['days']
 
     def set_current_days(self, new_days):
         self.db['days'] = new_days
+        self.CYCLE = self.generate_new_cycle(new_days)
+        self.set_current_mode(self.db["mode"])
+
+    def generate_new_cycle(self, days):
+        if days < 5:
+            return {'h': round(0.00, FP_DIGITS), 's': round(1.00, FP_DIGITS)}
+        elif days < 10:
+            return {'h': round(0.35, FP_DIGITS), 's': round(0.78, FP_DIGITS)}
+        elif days < 15:
+            return {'h': round(0.20, FP_DIGITS), 's': round(0.91, FP_DIGITS)}
+        elif days < 20:
+            return {'h': round(0.40, FP_DIGITS), 's': round(0.84, FP_DIGITS)}
+        else:
+            return {'h': round(0.85, FP_DIGITS), 's': round(0.61, FP_DIGITS)}
+
 
     def write_current_settings_to_hardware(self):
         onoff = self.get_current_onoff()

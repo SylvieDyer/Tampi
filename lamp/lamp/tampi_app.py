@@ -1,5 +1,5 @@
 import platform
-import lamp_util
+import lamp.lamp_util
 import pigpio
 import os
 import json
@@ -10,7 +10,6 @@ from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from paho.mqtt.client import Client
 from tampi_common import *
-import lamp_util
 
 MQTT_CLIENT_ID= "lamp_ui"
 
