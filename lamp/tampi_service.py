@@ -233,20 +233,27 @@ class TampiService(object):
         self.set_current_mode(self.get_current_mode())
 
     def generate_new_cycle(self, days):
-        if (self.get_avg_cycle() - self.get_avg_period()) < days:
+        # if on period, red
+        if (self.get_avg_cycle() - self.get_avg_period()) <= days:
             return {'h': round(0.00, FP_DIGITS), 's': round(1.00, FP_DIGITS)}
-        elif days < 5:
-            return {'h': round(0.00, FP_DIGITS), 's': round(1.00, FP_DIGITS)}
-        elif days < 10:
-            return {'h': round(0.35, FP_DIGITS), 's': round(0.78, FP_DIGITS)}
-        elif days < 15:
-            return {'h': round(0.20, FP_DIGITS), 's': round(0.91, FP_DIGITS)}
-        elif days < 20:
-            return {'h': round(0.40, FP_DIGITS), 's': round(0.84, FP_DIGITS)}
-        elif days < 25:
-            return {'h': round(0.98, FP_DIGITS), 's': round(0.88, FP_DIGITS)}
         else:
-            return {'h': round(0.00, FP_DIGITS), 's': round(1, FP_DIGITS)}
+            # warning yellow
+            if days < 5:
+                return {'h': round(0.13, FP_DIGITS), 's': round(0.84, FP_DIGITS)}
+            # teal
+            elif days < 10:
+                return {'h': round(0.85, FP_DIGITS), 's': round(0.76, FP_DIGITS)}
+            # ugly green yellow
+            elif days < 15:
+                return {'h': round(0.44, FP_DIGITS), 's': round(1.00, FP_DIGITS)}
+            # purple
+            elif days < 20:
+                return {'h': round(0.66, FP_DIGITS), 's': round(0.64, FP_DIGITS)}
+            # blue
+            elif days < 25:
+                return {'h': round(0.66, FP_DIGITS), 's': round(0.94, FP_DIGITS)}
+            else:
+                return {'h': round(0.00, FP_DIGITS), 's': round(1, FP_DIGITS)}
 
 
     def write_current_settings_to_hardware(self):
