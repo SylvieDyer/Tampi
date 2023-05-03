@@ -38,72 +38,85 @@ struct HomeView: View{
             
             Text("TAMPI Controls:").foregroundColor(.indigo.opacity(0.6)).font(.title3).fontWeight(.heavy).multilineTextAlignment(.leading)
             
-            // list of lampi controls
-            Section {
-                Button(action:{
-                    tampi.lampiState.isOn = !tampi.lampiState.isOn
-                })
-                {
+            if (!tampi.lampiState.isConnected){
+                Section{
                     HStack{
-                        Image(systemName: "power")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit).frame(width: 30, height: 20)
-                            .foregroundColor(tampi.lampiState.isOn ? .purple.opacity(0.7) : .gray.opacity(0.7))
-                        
-                        if (tampi.lampiState.isOn){
-                            Text("Turn Off")
-                                .foregroundColor(.purple.opacity(0.7)).font(.title3).fontWeight(.heavy)
+                        Spacer()
+                        Text("CURRENTLY DISABLED").font(.title2).fontWeight(.bold).foregroundColor(.red)
+                        Spacer()
+                    }
+                    Text("Please connect to a lamp to use these controls")
+                        .font(.title3).fontWeight(.semibold).foregroundColor(.black.opacity(0.6)).multilineTextAlignment(.center)
+                }
+            }
+            else{
+                // list of lampi controls
+                Section {
+                    Button(action:{
+                        tampi.lampiState.isOn = !tampi.lampiState.isOn
+                    })
+                    {
+                        HStack{
+                            Image(systemName: "power")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit).frame(width: 30, height: 20)
+                                .foregroundColor(tampi.lampiState.isOn ? .purple.opacity(0.7) : .gray.opacity(0.7))
+                            
+                            if (tampi.lampiState.isOn){
+                                Text("Turn Off")
+                                    .foregroundColor(.purple.opacity(0.7)).font(.title3).fontWeight(.heavy)
+                            }
+                            else{
+                                Text("Turn On") .foregroundColor(.gray).font(.title3).fontWeight(.heavy)
+                            }
                         }
-                        else{
-                            Text("Turn On") .foregroundColor(.gray).font(.title3).fontWeight(.heavy)
-                        }
-                    }
-                }
-                
-                Button(action:{
-                    tampi.lampiState.mode = 0
-                })
-                {
-                    HStack{
-                        
-                        Image(systemName: "drop.fill")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit).frame(width: 30, height: 20)
-                            .foregroundColor(.red.opacity(0.7))
-                        
-                        Text("Track Cycle")
-                            .foregroundColor(tampi.lampiState.mode == 0 ? .red.opacity(0.7) : .gray).font(.title3).fontWeight(.heavy)
-                    }
-                }
-                Button(action:{
-                    tampi.lampiState.mode = 1
-                })
-                {
-                    HStack{
-                        Image(systemName: "sun.min.fill")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit).frame(width: 30, height: 20)
-                            .foregroundColor(.yellow.opacity(0.7))
-                        
-                        
-                        Text("\(user.preset1 ?? "Preset 1" )")
-                            .foregroundColor(tampi.lampiState.mode == 1 ? .yellow.opacity(0.7) : .gray).font(.title3).fontWeight(.heavy)
-                    }
-                }
-                Button(action:{
-                    tampi.lampiState.mode = 2
-                })
-                {
-                    HStack {
-                        Image(systemName: "leaf.fill")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit).frame(width: 30, height: 20)
-                            .foregroundColor(.green.opacity(0.7))
-                        
-                        Text("\(user.preset2 ?? "Preset 2")")
-                            .foregroundColor(tampi.lampiState.mode == 2 ? .green.opacity(0.7) : .gray).font(.title3).fontWeight(.heavy)
                     }
                     
+                    Button(action:{
+                        tampi.lampiState.mode = 0
+                    })
+                    {
+                        HStack{
+                            
+                            Image(systemName: "drop.fill")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit).frame(width: 30, height: 20)
+                                .foregroundColor(.red.opacity(0.7))
+                            
+                            Text("Track Cycle")
+                                .foregroundColor(tampi.lampiState.mode == 0 ? .red.opacity(0.7) : .gray).font(.title3).fontWeight(.heavy)
+                        }
+                    }
+                    Button(action:{
+                        tampi.lampiState.mode = 1
+                    })
+                    {
+                        HStack{
+                            Image(systemName: "sun.min.fill")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit).frame(width: 30, height: 20)
+                                .foregroundColor(.yellow.opacity(0.7))
+                            
+                            
+                            Text("\(user.preset1 ?? "Preset 1" )")
+                                .foregroundColor(tampi.lampiState.mode == 1 ? .yellow.opacity(0.7) : .gray).font(.title3).fontWeight(.heavy)
+                        }
+                    }
+                    Button(action:{
+                        tampi.lampiState.mode = 2
+                    })
+                    {
+                        HStack {
+                            Image(systemName: "leaf.fill")
+                                .resizable()
+                                .aspectRatio(contentMode: .fit).frame(width: 30, height: 20)
+                                .foregroundColor(.green.opacity(0.7))
+                            
+                            Text("\(user.preset2 ?? "Preset 2")")
+                                .foregroundColor(tampi.lampiState.mode == 2 ? .green.opacity(0.7) : .gray).font(.title3).fontWeight(.heavy)
+                        }
+                        
+                    }
                 }
             }
         }
