@@ -105,7 +105,17 @@ extension Tampi {
     
     private func writeDays() {
         if let remaningDaysCharacteristic = remaningDaysCharacteristic {
-            let data = Data(bytes: &userInfo.daysUntilNewCycle, count: 1)
+            var cpf: UInt32 = 0
+          
+            let avgCycle = UInt32(userInfo.averageCycleLength)
+            let avgPeriodLength = UInt32(userInfo.periodLength)
+            let remainingDays = UInt32(userInfo.daysUntilNewCycle)
+         
+            cpf = avgCycle
+            cpf += avgPeriodLength << 8
+            cpf += remainingDays  << 16
+            
+            let data = Data(bytes: &cpf, count: 3)
             lampiPeripheral?.writeValue(data, for: remaningDaysCharacteristic, type:.withResponse)
         }
     }
