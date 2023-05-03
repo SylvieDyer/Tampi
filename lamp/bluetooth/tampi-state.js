@@ -6,7 +6,9 @@ function TampiState() {
     events.EventEmitter.call(this);
 
     this.mode = 0x00;
-    this.days = 0x00;
+    this.predictedStart = 0x00;
+    this.cycleLength = 0x00;
+    this.preiodLength = 0x00;
     this.is_on = true;
     this.brightness = 0xFF;
     this.hue = 0xFF;
@@ -47,7 +49,9 @@ function TampiState() {
         }
 
         var new_mode = new_state['mode'];
-        var new_days = new_state['days'];
+        var new_predictedStart = new_state['predicted'];
+        var new_cycleLength = new_state['avgCycle'];
+        var new_periodLength = new_state['avgPeriod'];
         var new_onoff = new_state['on'];
         var new_brightness = Math.round(new_state['brightness']*0xFF);
         var new_hue = Math.round(new_state['color']['h']*0xFF);
@@ -58,10 +62,13 @@ function TampiState() {
             that.mode = new_mode;
             that.emit('changed-mode', that.mode);
         }
-        if (that.new_days !== new_days) {
-            console.log('MQTT - DAYS UPDATED');
-            that.days = new_days;
-            that.emit('changed-days', that.days);
+        if ( (that.predictedStart !== new_predictedStart ) || (that.cycleLength !== new_cycleLength) ||
+             (that.preiodLength !== new_periodLength) ) {
+            console.log('MQTT - NEW DAYS % d%d %d', new_cycleLength, new_periodLength, new_predictedStart);
+            that.cycleLength = new_cycleLength;
+            that.preiodLength = new_periodLength;
+            that.predictedStart = new_predictedStart;
+            that.emit('changed-days', that.cycleLength, that.preiodLength, that.predictedStart);
         }
         if (that.is_on !== new_onoff) {
             console.log('MQTT - NEW ON/OFF');
@@ -89,11 +96,24 @@ function TampiState() {
 
 util.inherits(TampiState, events.EventEmitter);
 
-TampiState.prototype.set_days = function(days) {
-    this.days = days;
-    var tmp = {'client': this.clientId, 'days': this.days};
+// TampiState.prototype.set_days = function(days) {
+//     this.days = days;
+//     var tmp = {'client': this.clientId, 'days': this.days};
+//     this.mqtt_client.publish('lamp/set_config', JSON.stringify(tmp));
+//     console.log('days = ', this.days, ' msg: ', JSON.stringify(tmp));
+// };
+
+
+TampiState.prototype.set_days = function(cycle, period, future) {
+    this.cycleLength = cycle;
+    this.preiodLength = period;
+    this.predictedStart = future;
+    var tmp = {'client': this.clientId,
+               'predicted' : this.predictedStart,
+               'avgCycle' : this.cycleLength,
+               'avgPeriod' : this.preiodLength};
     this.mqtt_client.publish('lamp/set_config', JSON.stringify(tmp));
-    console.log('days = ', this.days, ' msg: ', JSON.stringify(tmp));
+    console.log('days = ', this.cycleLength, this.preiodLength, this.predictedStart);
 };
 
 TampiState.prototype.set_onoff = function(is_on) {

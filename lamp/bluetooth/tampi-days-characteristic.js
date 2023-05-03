@@ -22,12 +22,16 @@ function TampiDaysCharacteristic(tampiState) {
 
   this._update = null;
 
-  this.changed_days =  function(days) {
+  // c - cycleLength
+  // p - periodLength
+  // f - predicted (future) start
+  this.changed_days =  function(c, p, f) {
     console.log('tampiState changed TampiDaysCharacteristic');
     if( this._update !== null ) {
         console.log('updating new mode uuid=', this.uuid);
-        var data = new Buffer(1);
-        data.writeUInt8(Math.round(days));
+        // var data = new Buffer(1);
+        // data.writeUInt8(Math.round(days));
+        var data = new Buffer([c, p, f]);
         this._update(data);
     }
     }
@@ -47,8 +51,12 @@ TampiDaysCharacteristic.prototype.onReadRequest = function(offset, callback) {
     callback(this.RESULT_ATTR_NOT_LONG, null);
   }
   else {
-    var data = new Buffer(1);
-    data.writeUInt8(Math.round(this.tampiState.days));
+    // var data = new Buffer(1);
+    var data = new Buffer(3);
+    // CHANGE TAMPISTATE
+    data.writeUInt8(Math.round(this.tampiState.cycleLength), 0);
+    data.writeUInt8(Math.round(this.tampiState.periodLength), 1);
+    data.writeUInt8(Math.round(this.tampiState.predictedStart), 2);
     console.log('onReadRequest returning ', data);
     callback(this.RESULT_SUCCESS, data);
   }
@@ -58,12 +66,15 @@ TampiDaysCharacteristic.prototype.onWriteRequest = function(data, offset, withou
     if(offset) {
         callback(this.RESULT_ATTR_NOT_LONG);
     }
-    else if (data.length !== 1) {
+    else if (data.length !== 3) {
         callback(this.RESULT_INVALID_ATTRIBUTE_LENGTH);
     }
     else {
-        var days = data.readUInt8(0);
-        this.tampiState.set_days( days );
+        var cycleLength = data.readUInt8(0);
+        var periodLength = data.readUInt8(1);
+        var predictedStart = data.readUInt8(2);
+        // CHANGE SET DAYS
+        this.tampiState.set_days( cycleLength, periodLength, predictedStart );
         callback(this.RESULT_SUCCESS);
     }
 };
